@@ -1,0 +1,22 @@
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 1rem;
+}
+
+.form-control {
+  border-radius: 0.75rem;
+}
+
+.btn {
+  border-radius: 0.75rem;
+  font-weight: 500;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}

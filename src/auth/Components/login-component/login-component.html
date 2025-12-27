@@ -1,0 +1,129 @@
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+  <div class="card auth-card shadow-lg border-0">
+
+    <div class="card-body p-4 p-md-5">
+
+      <h3 class="text-center fw-bold mb-4">
+        {{ isLoginView ? 'Login to your account' : 'Register/Create a new account' }}
+      </h3>
+
+      <!-- LOGIN -->
+      <form *ngIf="isLoginView" (ngSubmit)="onLogin()" #loginForm="ngForm">
+
+        <div class="form-floating mb-3">
+          <input type="email"
+                 class="form-control"
+                 id="loginEmail"
+                 name="email"
+                 [(ngModel)]="loginModel.useremail"
+                 placeholder="name@example.com"
+                 required>
+          <label for="loginEmail">Email address</label>
+        </div>
+
+        <div  class="form-floating mb-3 position-relative">
+          <input type="password"
+                [type]="showPassword ? 'text' : 'password'"
+                 class="form-control"
+                 id="loginPassword"
+                 name="password"
+                 [(ngModel)]="loginModel.password"
+                 placeholder="Password"
+                 required minlength="6">
+          <label for="loginPassword">Password</label>
+
+          <span
+            class="position-absolute top-50 end-0 translate-middle-y me-3 cursor-pointer"
+            (click)="togglePassword()">
+            
+            <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+          </span>
+        </div>
+
+        <button class="btn btn-primary w-100 py-2" [disabled]="loginForm.invalid">
+          Login
+        </button>
+
+        <p class="text-center mt-3 mb-0">
+          Don’t have an account?
+          <a href="#" class="fw-semibold" (click)="toggleView()">Sign up</a>
+        </p>
+
+      </form>
+
+      <!-- SIGNUP -->
+      <form *ngIf="!isLoginView" (ngSubmit)="onSignup()" #signupForm="ngForm">
+
+        <div class="form-floating mb-3">
+          <input type="text"
+                 class="form-control"
+                 id="firstName"
+                 name="firstName"
+                 placeholder="First Name"
+                 ngModel required>
+          <label for="firstName">First Name</label>
+        </div>
+
+        <div class="form-floating mb-3">
+          <input type="text"
+                 class="form-control"
+                 id="lastName"
+                 name="lastName"
+                 placeholder="Last Name"
+                 ngModel required>
+          <label for="lastName">Last Name</label>
+        </div>
+
+        <div class="form-floating mb-3">
+          <input type="email"
+                 class="form-control"
+                 id="signupEmail"
+                 name="email"
+                 placeholder="Email"
+                 ngModel required email>
+          <label for="signupEmail">Email address</label>
+        </div>
+
+        <div class="form-floating mb-3">
+          <input type="number"
+                 class="form-control"
+                 id="phone"
+                 name="phone"
+                 placeholder="Phone"
+                 ngModel required>
+          <label for="phone">Phone</label>
+        </div>
+
+        <div class="form-floating mb-3">
+          <select class="form-control">
+            <option>Select User Role</option>
+            <option *ngFor="let role of userRoles" [value]="role.dataValue">
+              {{ role.dataText }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-floating mb-3">
+          <input type="password"
+                 class="form-control"
+                 id="signupPassword"
+                 name="password"
+                 placeholder="Password"
+                 ngModel required minlength="6">
+          <label for="signupPassword">Password</label>
+        </div>
+
+        <button class="btn btn-success w-100 py-2" [disabled]="signupForm.invalid">
+          Create Account
+        </button>
+
+        <p class="text-center mt-3 mb-0">
+          Already have an account?
+          <a href="#" class="fw-semibold" (click)="toggleView()">Login</a>
+        </p>
+
+      </form>
+
+    </div>
+  </div>
+</div>
