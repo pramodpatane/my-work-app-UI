@@ -1,22 +1,22 @@
 .auth-card {
+  max-width: 900px;
   width: 100%;
-  max-width: 420px;
-  border-radius: 1rem;
+  border-radius: 20px;
 }
 
-.form-control {
-  border-radius: 0.75rem;
+.auth-left {
+  background: linear-gradient(135deg, #667eea, #764ba2);
 }
 
-.btn {
-  border-radius: 0.75rem;
-  font-weight: 500;
+.logo {
+  width: 80px;
 }
 
-a {
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #6c757d;
 }

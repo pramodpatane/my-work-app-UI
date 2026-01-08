@@ -1,7 +1,15 @@
 <div class="card" *ngIf="IsDefaultView">
   <div class="card-header d-flex justify-content-between align-items-center">
     <span class="fw-bold">Employees Details</span>
-    <button type="button" class="btn btn-sm btn-primary" (click)="toggleIsDefaultVies()">Add</button>
+
+    <!-- <mat-form-field appearance="outline">
+      <input matInput [matDatepicker]="picker" [(ngModel)]="fromDate">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field> -->
+    <div></div>
+
+    <button type="button" class="btn btn-sm btn-primary" (click)="OpenAddEmployeeForm()">Add</button>
   </div>
 
   <div class="card-body">
@@ -11,10 +19,10 @@
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef>Actions</th>
           <td mat-cell *matCellDef="let row">
-            <button mat-icon-button color="primary" (click)="edit(row.id)">
+            <button mat-icon-button color="primary" (click)="Edit(row.id)">
               <mat-icon>edit</mat-icon>
             </button>
-            <button mat-icon-button color="warn" (click)="delete(row.id)">
+            <button mat-icon-button color="warn" (click)="Delete(row.id)">
               <mat-icon>delete</mat-icon>
             </button>
           </td>
@@ -26,7 +34,7 @@
         </ng-container>
 
         <ng-container matColumnDef="lastName">
-          <th mat-header-cell *matHeaderCellDef>lastname</th>
+          <th mat-header-cell *matHeaderCellDef>Lastname</th>
           <td mat-cell *matCellDef="let row">{{ row.lastName }}</td>
         </ng-container>
 
@@ -139,18 +147,6 @@
           </div>
         </div>
       </div>
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
 
       <div class="" *ngIf="ButtonText == 'Insert'">
         <button class="btn btn-primary" (click)="Insert()">Insert</button>

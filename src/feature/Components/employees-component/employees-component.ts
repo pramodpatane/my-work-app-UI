@@ -6,12 +6,17 @@ import { SwalService } from '../../../global/swal.service';
 import { EmployeeService } from '../../Services/employee-service';
 import { FilterData } from '../../../core/Models/FilterData';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EmployeeModel } from '../../Models/employee.model';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { DepartmentService } from '../../../core/Services/departments.service';
+import { DropdownModel } from '../../../auth/Models/dropdown.model';
 
 @Component({
   selector: 'app-employees-component',
-  imports: [ReactiveFormsModule, CommonModule, MatTableModule, MatPaginatorModule, MatIconModule],
+  imports: [ReactiveFormsModule, CommonModule, MatTableModule, MatPaginatorModule, MatIconModule, 
+    MatFormFieldModule, MatDatepickerModule, FormsModule],
   templateUrl: './employees-component.html',
   styleUrl: './employees-component.css',
 })
@@ -22,12 +27,14 @@ export class EmployeesComponent implements OnInit {
   ButtonText: string = "Insert";
   displayedColumns: string[] = ['actions', 'firstName', 'lastName', 'email', 'salary', 'department', 'createdDate' ];
   employeesData = new MatTableDataSource<any>([]);
+  fromDate!: Date;
+  DepartmentsList: DropdownModel[] = [];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   firstDay: any;
   
   constructor(private swalservice: SwalService, private employeeService: EmployeeService, private cdr: ChangeDetectorRef,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder, private departmentService: DepartmentService
   ) {
     this.IsDefaultView = true;
   }
@@ -35,10 +42,45 @@ export class EmployeesComponent implements OnInit {
   ngOnInit(): void {
     this.GetData();
     this.DeclareForm();  
+    this.GetDepartmentDropdown();
   }
 
   ngAfterViewInit() {
     this.employeesData.paginator = this.paginator;
+  }
+
+  OpenAddEmployeeForm() {
+    this.ClearForm();
+    this.toggleIsDefaultVies();
+    this.HeaderText = "Add Employee";
+    this.ButtonText = "Insert";
+  }
+
+  toggleIsDefaultVies() {
+    this.IsDefaultView = !this.IsDefaultView;
+  }
+
+  DeclareForm() {
+    this.employeeForm = this.formBuilder.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      salary: [null, [Validators.required, Validators.min(0)]],
+      departmentId: [null, Validators.required],
+      isActive: [true],
+      isDeleted: [false]
+    });
+  }
+
+  ConvertFormToModel() {
+    const model = new EmployeeModel();
+    model.firstName = this.employeeForm.value.firstName;
+    model.lastName = this.employeeForm.value.lastName;
+    model.email = this.employeeForm.value.email;
+    model.salary = this.employeeForm.value.salary;
+    model.departmentId = this.employeeForm.value.departmentId;
+    console.log(model);
+    return model;
   }
   
   async GetData() {
@@ -73,33 +115,6 @@ export class EmployeesComponent implements OnInit {
     }
   }
 
-  toggleIsDefaultVies() {
-    this.IsDefaultView = !this.IsDefaultView;
-  }
-
-  DeclareForm() {
-    this.employeeForm = this.formBuilder.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      salary: [null, [Validators.required, Validators.min(0)]],
-      departmentId: [null, Validators.required],
-      isActive: [true],
-      isDeleted: [false]
-    });
-  }
-
-  ConvertFormToModel() {
-    const model = new EmployeeModel();
-    model.firstName = this.employeeForm.value.firstName;
-    model.lastName = this.employeeForm.value.lastName;
-    model.email = this.employeeForm.value.email;
-    model.salary = this.employeeForm.value.salary;
-    model.departmentId = this.employeeForm.value.departmentId;
-    console.log(model);
-    return model;
-  }
-
   // insert form data method
   public async Insert() {
     try {
@@ -121,7 +136,7 @@ export class EmployeesComponent implements OnInit {
     }
   }
 
-  public async edit(id: number) {
+  public async Edit(id: number) {
     try {
       this.HeaderText = "Edit Employee";
       this.ButtonText= "Update";
@@ -149,7 +164,34 @@ export class EmployeesComponent implements OnInit {
     }
   }
 
-  delete(id: number) {
+  public async Delete(id: number) {
     console.log('Delete', id);
+    try {
+       
+    }
+    catch (err) {
+      throw err;
+    }
+  }
+
+  ClearForm() {
+    this.DeclareForm();
+  }
+
+  public async GetDepartmentDropdown() {
+    try {
+      (await this.departmentService.GetDepartmentDropdown()).subscribe({
+          next: (res) => {            
+            this.DepartmentsList = JSON.parse(JSON.stringify(res));
+            console.log("Departments" + this.DepartmentsList)
+          },
+          error: () => {
+            this.swalservice.ShowAlert("error", "");
+          }
+        });
+    }
+    catch (err) {
+      throw err;
+    }
   }
 }

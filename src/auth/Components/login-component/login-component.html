@@ -1,128 +1,136 @@
-<div class="container d-flex justify-content-center align-items-center min-vh-100">
-  <div class="card auth-card shadow-lg border-0">
+<div class="container min-vh-100 d-flex align-items-center justify-content-center">
+  <div class="card auth-card shadow-lg border-0 overflow-hidden">
 
-    <div class="card-body p-4 p-md-5">
+    <div class="row g-0">
 
-      <h3 class="text-center fw-bold mb-4">
-        {{ isLoginView ? 'Login to your account' : 'Register/Create a new account' }}
-      </h3>
+      <!-- LEFT BRANDING PANEL -->
+      <div class="col-md-6 d-none d-md-flex auth-left">
+        <div class="text-white p-5 d-flex flex-column justify-content-center w-100">
+          
+          <img src="assets/logo.png" class="logo mb-4" alt="Logo">
 
-      <!-- LOGIN -->
-      <form *ngIf="isLoginView" (ngSubmit)="onLogin()" #loginForm="ngForm">
+          <h2 class="fw-bold">
+            {{ isLoginView ? 'Welcome Back!' : 'Join Us Today' }}
+          </h2>
 
-        <div class="form-floating mb-3">
-          <input type="email"
-                 class="form-control"
-                 id="loginEmail"
-                 name="email"
-                 [(ngModel)]="loginModel.useremail"
-                 placeholder="name@example.com"
-                 required>
-          <label for="loginEmail">Email address</label>
+          <p class="mt-3 opacity-75">
+            {{ isLoginView 
+              ? 'Login to access your dashboard and manage your account.' 
+              : 'Create an account and start your journey with us.' }}
+          </p>
         </div>
+      </div>
 
-        <div  class="form-floating mb-3 position-relative">
-          <input type="password"
-                [type]="showPassword ? 'text' : 'password'"
-                 class="form-control"
-                 id="loginPassword"
-                 name="password"
-                 [(ngModel)]="loginModel.password"
-                 placeholder="Password"
-                 required minlength="6">
-          <label for="loginPassword">Password</label>
+      <!-- RIGHT FORM PANEL -->
+      <div class="col-md-6">
+        <div class="card-body p-4 p-lg-5">
 
-          <span
-            class="position-absolute top-50 end-0 translate-middle-y me-3 cursor-pointer"
-            (click)="togglePassword()">
-            
-            <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
-          </span>
+          <h4 class="fw-bold mb-4 text-center">
+            {{ isLoginView ? 'Login' : 'Create Account' }}
+          </h4>
+
+          <!-- LOGIN FORM -->
+          <form *ngIf="isLoginView" (ngSubmit)="onLogin()" #loginForm="ngForm">
+
+            <div class="form-floating mb-3">
+              <input type="useremail" class="form-control"
+                    [(ngModel)]="loginModel.useremail"
+                    name="useremail" ngModel required placeholder="Email">
+              <label>Email</label>
+            </div>
+
+            <div class="form-floating mb-3 position-relative">
+              <input class="form-control"
+                     [type]="showPassword ? 'text' : 'password'"
+                     [(ngModel)]="loginModel.password"
+                     name="password" ngModel required minlength="6"
+                     placeholder="Password">
+              <label>Password</label>
+
+              <span class="toggle-password" (click)="togglePassword()">
+                <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+              </span>
+            </div>
+
+            <button class="btn btn-primary w-100 py-2" [disabled]="loginForm.invalid">
+              Login
+            </button>
+
+            <p class="text-center mt-3">
+              Don’t have an account?
+              <a href="#" (click)="toggleView()">Sign up</a>
+            </p>
+          </form>
+
+          <!-- SIGNUP FORM -->
+          <form *ngIf="!isLoginView" (ngSubmit)="onSignup()" #signupForm="ngForm">
+
+            <div class="row">
+              <div class="col">
+                <div class="form-floating mb-3">
+                  <input class="form-control" placeholder="First Name" ngModel name="firstName" required>
+                  <label>First Name</label>
+                </div>
+              </div>
+
+              <div class="col">
+                <div class="form-floating mb-3">
+                  <input class="form-control" placeholder="Last Name" ngModel name="lastName" required>
+                  <label>Last Name</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col">
+                <div class="form-floating mb-3">
+                  <input type="number"
+                        class="form-control"
+                        id="phone"
+                        name="phone"
+                        placeholder="Phone"
+                        ngModel required>
+                  <label for="phone">Phone</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col">
+                <div class="form-floating mb-3">
+                  <select class="form-control">
+                    <option value="0">Select User Role</option>
+                    <option *ngFor="let role of userRoles" [value]="role.dataValue">
+                      {{ role.dataText }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-floating mb-3">
+              <input type="email" class="form-control" placeholder="Email" ngModel name="email" required>
+              <label>Email</label>
+            </div>
+
+            <div class="form-floating mb-3">
+              <input type="password" class="form-control" placeholder="Password"
+                     ngModel name="password" required minlength="6">
+              <label>Password</label>
+            </div>
+
+            <button class="btn btn-success w-100 py-2" [disabled]="signupForm.invalid">
+              Create Account
+            </button>
+
+            <p class="text-center mt-3">
+              Already have an account?
+              <a href="#" (click)="toggleView()">Login</a>
+            </p>
+          </form>
+
         </div>
-
-        <button class="btn btn-primary w-100 py-2" [disabled]="loginForm.invalid">
-          Login
-        </button>
-
-        <p class="text-center mt-3 mb-0">
-          Don’t have an account?
-          <a href="#" class="fw-semibold" (click)="toggleView()">Sign up</a>
-        </p>
-
-      </form>
-
-      <!-- SIGNUP -->
-      <form *ngIf="!isLoginView" (ngSubmit)="onSignup()" #signupForm="ngForm">
-
-        <div class="form-floating mb-3">
-          <input type="text"
-                 class="form-control"
-                 id="firstName"
-                 name="firstName"
-                 placeholder="First Name"
-                 ngModel required>
-          <label for="firstName">First Name</label>
-        </div>
-
-        <div class="form-floating mb-3">
-          <input type="text"
-                 class="form-control"
-                 id="lastName"
-                 name="lastName"
-                 placeholder="Last Name"
-                 ngModel required>
-          <label for="lastName">Last Name</label>
-        </div>
-
-        <div class="form-floating mb-3">
-          <input type="email"
-                 class="form-control"
-                 id="signupEmail"
-                 name="email"
-                 placeholder="Email"
-                 ngModel required email>
-          <label for="signupEmail">Email address</label>
-        </div>
-
-        <div class="form-floating mb-3">
-          <input type="number"
-                 class="form-control"
-                 id="phone"
-                 name="phone"
-                 placeholder="Phone"
-                 ngModel required>
-          <label for="phone">Phone</label>
-        </div>
-
-        <div class="form-floating mb-3">
-          <select class="form-control">
-            <option>Select User Role</option>
-            <option *ngFor="let role of userRoles" [value]="role.dataValue">
-              {{ role.dataText }}
-            </option>
-          </select>
-        </div>
-
-        <div class="form-floating mb-3">
-          <input type="password"
-                 class="form-control"
-                 id="signupPassword"
-                 name="password"
-                 placeholder="Password"
-                 ngModel required minlength="6">
-          <label for="signupPassword">Password</label>
-        </div>
-
-        <button class="btn btn-success w-100 py-2" [disabled]="signupForm.invalid">
-          Create Account
-        </button>
-
-        <p class="text-center mt-3 mb-0">
-          Already have an account?
-          <a href="#" class="fw-semibold" (click)="toggleView()">Login</a>
-        </p>
-
-      </form>
+      </div>
 
     </div>
   </div>

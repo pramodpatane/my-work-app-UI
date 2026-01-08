@@ -35,7 +35,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
     this.usersData.paginator = this.paginator;
   }
   
-  async GetData() {
+  public async GetData() {
     try{
       let filterdata: FilterData = new FilterData();
       filterdata.fromDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
@@ -49,6 +49,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
         this.userService.GetUserData(filterdata).subscribe({
           next: (res) => {            
             this.usersData = JSON.parse(JSON.stringify(res));
+            console.log(this.usersData);
             this.cdr.detectChanges();
           },
           error: () => {
@@ -66,15 +67,20 @@ export class UsersComponent implements OnInit, AfterViewInit {
     }
   }
 
-  addUser() {
-    
+  public async InsertData() {
+    try {
+
+    }
+    catch (err) {
+      throw err;
+    }
   }
 
-  edit(id: number) {
+  public Edit(id: number) {
     console.log('Edit', id);
   }
 
-  delete(id: number) {
+  public Delete(id: number) {
     console.log('Delete', id);
   }
 }

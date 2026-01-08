@@ -101,7 +101,7 @@ export class LoginComponent {
       (await this.userRolesService.GetUserRolesDropdown()).subscribe({
           next: (res) => {            
             this.userRoles = JSON.parse(JSON.stringify(res));
-            console.log("UserRolesList", this.userRoles);
+            //console.log("UserRolesList", this.userRoles);
           },
           error: () => {
             this.swalservice.ShowAlert("error", "");
