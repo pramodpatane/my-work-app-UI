@@ -39,7 +39,43 @@
               <label>Email</label>
             </div>
 
-            <div class="form-floating mb-3 position-relative">
+            <div class="row mb-3">
+              <div class="col-md-6 d-flex align-items-center">
+                <input type="radio" name="LoginType" id="IsPassword" checked class="me-2" (click)="IsChecked($event,'IsPassword')">
+                <label for="IsPassword" class="me-3 mb-0">Password</label>
+              </div>
+
+              <div class="col-md-6 d-flex align-items-center">
+                <input type="radio" name="LoginType" id="IsOtp" class="me-2" (click)="IsChecked($event,'IsOtp')">
+                <label for="IsOtp" class="me-3 mb-0">OTP</label>                
+              </div>
+            </div>
+
+            <div class="row mb-3 d-flex" *ngIf="isOTPEnabled && !IsPasswordEnabled">
+              <div class="col-md-6">
+                <button class="btn btn-primary btn-sm" (click)="SendOTP()">Send OTP</button>
+              </div>
+              <div class="col-md-6">
+                <p>{{OTPSendMessage}}</p>
+              </div>
+            </div>
+
+            <div class="form-floating mb-3 position-relative" *ngIf="isOTPEnabled && !IsPasswordEnabled">
+              <div class="row">
+                <div class="col-md-6">
+                  <input class="form-control"
+                     [(ngModel)]="OTP"
+                     name="otp" ngModel required minlength="6"
+                     placeholder="OTP">
+                </div>
+                <div class="col-md-6">
+                  <button class="btn btn-secondary btn-sm" (click)="VerifyOTP()">Verify OTP</button>
+                </div>
+              </div>
+              
+            </div>
+
+            <div class="form-floating mb-3 position-relative" *ngIf="IsPasswordEnabled && !isOTPEnabled">
               <input class="form-control"
                      [type]="showPassword ? 'text' : 'password'"
                      [(ngModel)]="loginModel.password"
@@ -52,7 +88,7 @@
               </span>
             </div>
 
-            <button class="btn btn-primary w-100 py-2" [disabled]="loginForm.invalid">
+            <button class="btn btn-primary w-100 py-2" [disabled]="loginForm.invalid"  *ngIf="IsPasswordEnabled && !isOTPEnabled">
               Login
             </button>
 
