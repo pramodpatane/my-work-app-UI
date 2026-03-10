@@ -1,45 +1,39 @@
 <!-- <div class="custom-gradient" style="background: linear-gradient(to right, #ff512f, #dd2476);"> -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm fixed-top">
-    <div class="container-fluid">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm fixed-top">
+  <div class="container-fluid">
 
-      <!-- Brand -->
-      <a class="navbar-brand nav-link fw-bold" routerLink="/core/dashboard">
-        My Working App
-      </a>
+    <!-- Brand -->
+    <a class="navbar-brand nav-link fw-bold" routerLink="/core/dashboard">
+      My Working App
+    </a>
 
-      <!-- Mobile Toggle -->
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNavbar"
-        aria-controls="topNavbar" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+    <!-- Mobile Toggle -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNavbar"
+      aria-controls="topNavbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-      <!-- Navbar Links -->
-      <div class="collapse navbar-collapse" id="topNavbar">
+    <!-- Navbar Links -->
+    <div class="collapse navbar-collapse" id="topNavbar">
 
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-          <li class="nav-item">
-            <a class="nav-link" routerLink="/core/dashboard" routerLinkActive="active">
-              Dashboard
-            </a>
-          </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/core/dashboard" routerLinkActive="active">
+            Dashboard
+          </a>
+        </li>
 
-          <li class="nav-item">
-            <a class="nav-link" routerLink="/core/users" routerLinkActive="active">
-              Users
-            </a>
-          </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/feature/employees" routerLinkActive="active">
+            Employees
+          </a>
+        </li>
 
-          <li class="nav-item">
-            <a class="nav-link" routerLink="/feature/employees" routerLinkActive="active">
-              Employees
-            </a>
-          </li>
+      </ul>
 
-        </ul>
-
-        <!-- Right Side -->
-        <div class="d-flex align-items-center">
+      <!-- Right Side -->
+      <!-- <div class="d-flex align-items-center">
 
           <span class="text-light me-3 d-none d-lg-inline">
             Welcome, {{ userName }}
@@ -49,14 +43,56 @@
             Logout
           </button>
 
+        </div> -->
+      <!-- Right Side -->
+      <div class="d-flex align-items-center ms-auto">
+
+        <div class="dropdown">
+
+          <a class="d-flex align-items-center text-light text-decoration-none dropdown-toggle" href="#" role="button"
+            data-bs-toggle="dropdown" aria-expanded="false">
+
+            <span class="me-2 d-none d-lg-inline">
+              {{ userName }}
+            </span>
+
+            <i class="bi bi-person-circle fs-5"></i>
+          </a>
+
+          <ul class="dropdown-menu dropdown-menu-end shadow">
+            <li *ngIf="userRole == 'Superadmin'">
+              <a class="dropdown-item" routerLink="/core/users">
+                Users
+              </a>
+            </li>
+
+            <li>
+              <a class="dropdown-item" routerLink="/user-settings">
+                User Settings
+              </a>
+            </li>
+
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            <li>
+              <a style="cursor: pointer !important;" class="dropdown-item text-danger" (click)="logout()">
+                Logout
+              </a>
+            </li>
+          </ul>
+
         </div>
+
       </div>
     </div>
-  </nav>
-
-  <!-- Page Content -->
-  <div class="container-fluid pt-5 mt-3">
-    <router-outlet></router-outlet>
   </div>
+</nav>
+
+<!-- Page Content -->
+<div class="container-fluid pt-5 mt-3">
+  <router-outlet></router-outlet>
+</div>
 
 <!-- </div> -->

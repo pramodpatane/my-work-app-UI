@@ -30,7 +30,7 @@
           </h4>
 
           <!-- LOGIN FORM -->
-          <form *ngIf="isLoginView" (ngSubmit)="onLogin()" #loginForm="ngForm">
+          <form *ngIf="isLoginView" #loginForm="ngForm">
 
             <div class="form-floating mb-3">
               <input type="useremail" class="form-control"
@@ -66,7 +66,7 @@
                   <input class="form-control"
                      [(ngModel)]="OTP"
                      name="otp" ngModel required minlength="6"
-                     placeholder="OTP">
+                     placeholder="Enter OTP">
                 </div>
                 <div class="col-md-6">
                   <button class="btn btn-secondary btn-sm" (click)="VerifyOTP()">Verify OTP</button>
@@ -88,7 +88,7 @@
               </span>
             </div>
 
-            <button class="btn btn-primary w-100 py-2" [disabled]="loginForm.invalid"  *ngIf="IsPasswordEnabled && !isOTPEnabled">
+            <button class="btn btn-primary w-100 py-2" (click)="onLogin()" [disabled]="loginForm.invalid" *ngIf="IsPasswordEnabled && !isOTPEnabled">
               Login
             </button>
 
@@ -99,19 +99,21 @@
           </form>
 
           <!-- SIGNUP FORM -->
-          <form *ngIf="!isLoginView" (ngSubmit)="onSignup()" #signupForm="ngForm">
+          <form *ngIf="!isLoginView" #signupForm="ngForm">
 
             <div class="row">
               <div class="col">
                 <div class="form-floating mb-3">
-                  <input class="form-control" placeholder="First Name" ngModel name="firstName" required>
+                  <input class="form-control" placeholder="First Name" [(ngModel)]="userModel.firstName" 
+                    ngModel name="firstName" required>
                   <label>First Name</label>
                 </div>
               </div>
 
               <div class="col">
                 <div class="form-floating mb-3">
-                  <input class="form-control" placeholder="Last Name" ngModel name="lastName" required>
+                  <input class="form-control" placeholder="Last Name" [(ngModel)]="userModel.lastName"
+                  ngModel name="lastName" required>
                   <label>Last Name</label>
                 </div>
               </div>
@@ -120,11 +122,11 @@
             <div class="row">
               <div class="col">
                 <div class="form-floating mb-3">
-                  <input type="number"
-                        class="form-control"
+                  <input class="form-control"
                         id="phone"
                         name="phone"
                         placeholder="Phone"
+                        [(ngModel)]="userModel.phone"
                         ngModel required>
                   <label for="phone">Phone</label>
                 </div>
@@ -134,10 +136,11 @@
             <div class="row">
               <div class="col">
                 <div class="form-floating mb-3">
-                  <select class="form-control">
-                    <option value="0">Select User Role</option>
+                  <select class="form-control" [(ngModel)]="userModel.roleId" name="roleId" ngModel required>
+                    <!-- Placeholder -->
+                    <option value="0" disabled selected>Select User Role</option>
                     <option *ngFor="let role of userRoles" [value]="role.dataValue">
-                      {{ role.dataText }}
+                      {{ role.dataText}}
                     </option>
                   </select>
                 </div>
@@ -145,17 +148,18 @@
             </div>
 
             <div class="form-floating mb-3">
-              <input type="email" class="form-control" placeholder="Email" ngModel name="email" required>
+              <input type="email" class="form-control" placeholder="Email" [(ngModel)]="userModel.email"
+                ngModel name="email" required>
               <label>Email</label>
             </div>
 
             <div class="form-floating mb-3">
-              <input type="password" class="form-control" placeholder="Password"
+              <input type="password" class="form-control" placeholder="Password" [(ngModel)]="userModel.password"
                      ngModel name="password" required minlength="6">
               <label>Password</label>
             </div>
 
-            <button class="btn btn-success w-100 py-2" [disabled]="signupForm.invalid">
+            <button class="btn btn-success w-100 py-2" [disabled]="signupForm.invalid" (click)="InsertUser()">
               Create Account
             </button>
 

@@ -1,5 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { EmployeeModel } from "../Models/employee.model";
 
 @Injectable({
   providedIn: "root"
@@ -12,7 +13,7 @@ export class EmployeeService {
 
   public async GetAllData(data: any) {
     try {
-      const apiurl = `${this.baseApiUrl}/GetEmployees`;
+      const apiurl = `${this.baseApiUrl}/GetEmployeesData`;
       return await this.http.post(apiurl, data);
     }
     catch(err) {
@@ -20,7 +21,7 @@ export class EmployeeService {
     }
   }
 
-  public async GetById(id: number) {
+  public async GetById(id: string) {
     try {
       const apiurl = `${this.baseApiUrl}/GetEmployeeById/` + id;
       return await this.http.get(apiurl);
@@ -30,7 +31,7 @@ export class EmployeeService {
     }
   }
 
-  public async InsertData(data: any) {
+  public async InsertData(data: EmployeeModel) {
     try {
       const apiurl = `${this.baseApiUrl}/Create`;
       return await this.http.post(apiurl, data);
@@ -43,6 +44,15 @@ export class EmployeeService {
     try {
       const apiurl = `${this.baseApiUrl}/Update`;
       return await this.http.post(apiurl, data);
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  public async Delete(recordId: string) {
+    try {
+      const apiurl = `${this.baseApiUrl}/Delete/` + recordId;
+      return await this.http.get(apiurl);
     } catch (err) {
       throw err;
     }

@@ -1,4 +1,6 @@
 export class EmployeeModel {
+    id: number = 0;
+    recordId: string = "";
     firstName: string = "";
     lastName: String = "";
     email: string = "";
