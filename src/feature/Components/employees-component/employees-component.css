@@ -1,0 +1,16 @@
+.table-container {
+  max-height: 520px; /* roughly 10 rows */
+  overflow-y: auto;
+  width: 100%;
+}
+
+table {
+  width: 100%;
+}
+
+.mat-header-row {
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 1;
+}

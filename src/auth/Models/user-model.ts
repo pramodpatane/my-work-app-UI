@@ -1,8 +1,13 @@
 export class UserModel {
-    username: string = "";
-    token: string = "";
+    firstName: string = "";
+    lastName: string = "";
+    password: string = "";
+    passwordHash: string = "";
+    passwordSalt: string = "";
+    phone: string = "";
     email: string = "";
-    role: string = "";
-    isActive: boolean = true;
+    roleId: number = 0;
     profileImageUrl: string = "";
+    isEmailVerified: boolean = false;
+    createdBy: string = "";
 }

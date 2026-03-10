@@ -6,12 +6,12 @@ import { Injectable } from "@angular/core";
 })
 
 export class UserRolesService {
-    baseApiUrl: string = 'https://localhost:44391/api/Auth';
+    baseApiUrl: string = 'https://localhost:44391/api/UserRoles';
 
   constructor(private http: HttpClient) {  }
 
   public async GetUserRolesDropdown() {
-    const apiurl = `${this.baseApiUrl}/GetUserDropdown`;
+    const apiurl = `${this.baseApiUrl}/GetDropdown`;
     return this.http.get(apiurl);
   }
 }

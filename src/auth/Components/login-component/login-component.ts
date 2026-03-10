@@ -10,6 +10,8 @@ import { SwalService } from '../../../global/swal.service';
 import { DropdownModel } from '../../Models/dropdown.model';
 import { EmailService } from '../../Services/email-service';
 import { EmailModel, VerifyOtpModel } from '../../Models/email.model';
+import { UserModel } from '../../Models/user-model';
+import { UserService } from '../../../core/Services/user-service';
 
 @Component({
   selector: 'app-login-component',
@@ -20,6 +22,7 @@ import { EmailModel, VerifyOtpModel } from '../../Models/email.model';
 export class LoginComponent {
   isLoginView:boolean = true;
   loginModel: LoginModel = new LoginModel();
+  userModel: UserModel = new UserModel();
   showPassword: boolean = false;
   isOTPEnabled: boolean = false;
   userRoles: DropdownModel[] = [];
@@ -29,7 +32,8 @@ export class LoginComponent {
   OTPSendMessage: string = "";
 
   constructor(private authService: AuthService, private router: Router, private userRolesService: UserRolesService,
-    private emailService: EmailService, private swalservice: SwalService,
+    private emailService: EmailService, private swalservice: SwalService, private swalService: SwalService,
+    private userService: UserService
   ) {}
 
   ngOnInit() {
@@ -60,30 +64,38 @@ export class LoginComponent {
     }
   }
 
-  onLogin() {
+  public onLogin() {
     try{
       let response = "";
-      if(this.loginModel.useremail != "" && this.loginModel.password != "") {
-        this.authService.login(this.loginModel).subscribe({
-          next: (res) => {
-            response = JSON.stringify(res);
-            if(JSON.parse(response).isSuccess == true) {
-              localStorage.setItem("UserData", response);
-              localStorage.setItem("IsUserLoggedIn", "True");
-
-              this.router.navigate(['/core']);   // navigate to navbar
-            }
-            else {
-              this.ShowAlert("error", JSON.parse(response).message);
-            }
-          },
-          error: (err) => {
-            this.ShowAlert("error", "Invalid email or password!");
-            // to clear fields
-            this.ClearFormFields();
-          }
-        });
+      if(!this.loginModel.useremail) {
+        this.swalservice.ShowAlert("error", "Useremail is required");
+        return;
       }
+      if(!this.loginModel.password && !this.loginModel.isOtpVerified) {
+        this.swalservice.ShowAlert("error", "password is required");
+        return;
+      }
+      
+      this.authService.login(this.loginModel).subscribe({
+        next: (res) => {
+          response = JSON.stringify(res);
+          if(JSON.parse(response).isSuccess == true) {
+            localStorage.setItem("UserData", response);
+            localStorage.setItem("IsUserLoggedIn", "True");
+
+            this.router.navigate(['/core']);   // navigate to navbar
+          }
+          else {
+            this.swalService.ShowAlert("error", JSON.parse(response).message);
+          }
+        },
+        error: (err) => {
+          this.swalService.ShowAlert("error", "Invalid email or password!");
+          // to clear fields
+          this.ClearFormFields();
+        }
+      });
+      
     }
     catch (error) {
       throw error;
@@ -96,26 +108,6 @@ export class LoginComponent {
   
   onSignup () {
 
-  }
-
-  // method to show alert popup
-  ShowAlert(alerttext: string, message: string) {
-    const key = alerttext.toLowerCase();
-
-    let icon: 'success' | 'error' | 'warning' | 'info' | 'question' = 'info';
-
-    if (key.includes('success')) icon = 'success';
-    else if (key.includes('error') || key.includes('failed')) icon = 'error';
-    else if (key.includes('warning') || key.includes('alert')) icon = 'warning';
-    else if (key.includes('info')) icon = 'info';
-    else if (key.includes('confirm')) icon = 'question';
-
-    Swal.fire({
-      title: alerttext,
-      text: message,
-      icon: icon,
-      confirmButtonText: 'OK'
-    });
   }
 
   public async GetUserRolesDropdown() {
@@ -215,15 +207,12 @@ export class LoginComponent {
       (await this.emailService.VerifyOTP(otpmodel)).subscribe({
           next: (res) => {
             response = JSON.stringify(res);
-            if(JSON.parse(response).isSuccess == true) {
-              localStorage.setItem("UserData", response);
-              localStorage.setItem("IsUserLoggedIn", "True");
-
-              this.router.navigate(['/core']);   // navigate to navbar
-            }
-            else {
-              this.ShowAlert("error", JSON.parse(response).message);
-            }
+            if(response == 'true') {
+              this.loginModel.isOtpVerified = true;
+              this.onLogin();
+            } else {
+              this.swalService.ShowAlert("error", "Invalid or expired OTP");
+            }            
           },
           error: () => {
             this.swalservice.ShowAlert("error", "Invalid email or OTP!");
@@ -231,6 +220,30 @@ export class LoginComponent {
             this.ClearFormFields();
           }
         });
+    }
+    catch(error) {
+      throw error;
+    }
+  }
+
+  public async InsertUser() {
+    try {
+      let response = "";
+      this.userModel.roleId = Number(this.userModel.roleId);
+      this.userService.Insert(this.userModel).subscribe({
+        next: (res) => {
+          response = JSON.stringify(res);
+          if(JSON.parse(response).isSuccess == true) {
+            this.swalService.ShowAlert("success", JSON.parse(response).message);
+          }
+          else {
+            this.swalService.ShowAlert("error", JSON.parse(response).message);
+          }
+        },
+        error: (err) => {
+          this.swalService.ShowAlert("error", "User not created!");          
+        }
+      });
     }
     catch(error) {
       throw error;

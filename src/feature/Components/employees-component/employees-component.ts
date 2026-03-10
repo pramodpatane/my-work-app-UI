@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { SwalService } from '../../../global/swal.service';
 import { EmployeeService } from '../../Services/employee-service';
@@ -27,8 +27,10 @@ export class EmployeesComponent implements OnInit {
   ButtonText: string = "Insert";
   displayedColumns: string[] = ['actions', 'firstName', 'lastName', 'email', 'salary', 'department', 'createdDate' ];
   employeesData = new MatTableDataSource<any>([]);
+  totalCount: number = 0;
   fromDate!: Date;
   DepartmentsList: DropdownModel[] = [];
+  filterdata: FilterData = new FilterData();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   firstDay: any;
@@ -39,7 +41,7 @@ export class EmployeesComponent implements OnInit {
     this.IsDefaultView = true;
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.GetData();
     this.DeclareForm();  
     this.GetDepartmentDropdown();
@@ -51,17 +53,18 @@ export class EmployeesComponent implements OnInit {
 
   OpenAddEmployeeForm() {
     this.ClearForm();
-    this.toggleIsDefaultVies();
+    this.toggleIsDefaultView();
     this.HeaderText = "Add Employee";
     this.ButtonText = "Insert";
   }
 
-  toggleIsDefaultVies() {
+  toggleIsDefaultView() {
     this.IsDefaultView = !this.IsDefaultView;
   }
 
   DeclareForm() {
     this.employeeForm = this.formBuilder.group({
+      recordId: [''],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -74,41 +77,47 @@ export class EmployeesComponent implements OnInit {
 
   ConvertFormToModel() {
     const model = new EmployeeModel();
+    model.recordId = this.employeeForm.value.recordId;
     model.firstName = this.employeeForm.value.firstName;
     model.lastName = this.employeeForm.value.lastName;
     model.email = this.employeeForm.value.email;
     model.salary = this.employeeForm.value.salary;
     model.departmentId = this.employeeForm.value.departmentId;
-    console.log(model);
+    model.isActive = this.employeeForm.value.isActive;
+    model.isDeleted = this.employeeForm.value.isDeleted;
+
+    model.departmentId = Number(model.departmentId);
+    //console.log(model);
     return model;
   }
   
+  onPageChange(event: PageEvent) {
+    this.filterdata.pagesize = event.pageSize;
+    this.filterdata.skip = event.pageIndex;
+    this.GetData();
+  }
+
   async GetData() {
     try{
-      let filterdata: FilterData = new FilterData();
-      filterdata.fromDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-      filterdata.toDate = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
-      filterdata.pagesize = 10;
-      filterdata.skip = 0;
-      filterdata.filterString = "";
-      filterdata.sortString = "";
+      const today = new Date();
+      const dateBefore120Days = new Date();
+      dateBefore120Days.setDate(today.getDate() - 120);
+      this.filterdata.fromDate = dateBefore120Days;
+      this.filterdata.toDate = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
       
-      //if(this.loginModel.useremail != "" && this.loginModel.password != "") {
-       (await this.employeeService.GetAllData(filterdata)).subscribe({
+       (await this.employeeService.GetAllData(this.filterdata)).subscribe({
           next: (res) => {            
-            this.employeesData = JSON.parse(JSON.stringify(res));
-            //console.log(this.employeesData)
+            let response = JSON.parse(JSON.stringify(res));
+            //console.log(response)
+            this.employeesData = response.data;
+            this.totalCount = response.totalCount;
             this.cdr.detectChanges();
           },
           error: () => {
             this.swalservice.ShowAlert("error", "");
           }
         });
-      //}
-      // this.userService.GetUserData({}).subscribe((res: any[] | any) => {
-      //   // ✅ Assign ONLY to .data
-      //   this.usersData.data = res;
-      // });
+      //} ✅
     }
     catch(err) {
       throw err;
@@ -120,11 +129,14 @@ export class EmployeesComponent implements OnInit {
     try {
       let datamodel = this.ConvertFormToModel();
       this.HeaderText = "Add Employee";
-      this.toggleIsDefaultVies();
+      this.toggleIsDefaultView();
       
        (await this.employeeService.InsertData(datamodel)).subscribe({
-          next: (res) => {            
-            
+          next: (res) => {
+            if(res == 1) {
+              this.swalservice.ShowAlert("success", "Record Inserted Successfully!");
+            }
+            this.GetData();
           },
           error: () => {
             this.swalservice.ShowAlert("error", "");
@@ -136,16 +148,41 @@ export class EmployeesComponent implements OnInit {
     }
   }
 
-  public async Edit(id: number) {
+  // update form data method
+  public async Update() {
+    try {
+      let datamodel = this.ConvertFormToModel();
+      this.HeaderText = "Edit Employee";
+      this.toggleIsDefaultView();
+      
+       (await this.employeeService.UpdateData(datamodel)).subscribe({
+          next: (res) => {            
+            if(res == 1) {
+              this.swalservice.ShowAlert("success", "Record Updated Successfully!");
+            }
+            this.GetData();
+          },
+          error: () => {
+            this.swalservice.ShowAlert("error", "");
+          }
+        });
+    }
+    catch(err) {
+      throw err;
+    }
+  }
+
+  public async Edit(recordId: string) {
     try {
       this.HeaderText = "Edit Employee";
       this.ButtonText= "Update";
-      this.toggleIsDefaultVies();
+      this.toggleIsDefaultView();
       
-       (await this.employeeService.GetById(id)).subscribe({
+       (await this.employeeService.GetById(recordId)).subscribe({
           next: (res) => {            
             let response = JSON.parse(JSON.stringify(res))
-            console.log(response)
+            //console.log(response)
+            this.employeeForm.get('recordId')?.setValue(response.recordId);
             this.employeeForm.get('firstName')?.setValue(response.firstName);
             this.employeeForm.get('lastName')?.setValue(response.lastName);
             this.employeeForm.get('email')?.setValue(response.email);
@@ -164,10 +201,26 @@ export class EmployeesComponent implements OnInit {
     }
   }
 
-  public async Delete(id: number) {
-    console.log('Delete', id);
+  public async Delete(recordId: string) {
     try {
-       
+      const isConfirmed = confirm("Are you sure you want to delete this record?");
+
+      if (isConfirmed) {
+        (await this.employeeService.Delete(recordId)).subscribe({
+          next: (res) => {            
+            let response = JSON.parse(JSON.stringify(res));
+            if(response.isSuccess) {
+              this.swalservice.ShowAlert("success", response.message);
+              this.GetData();
+            } else {
+              this.swalservice.ShowAlert("error", response.message);
+            }
+          },
+          error: () => {
+            this.swalservice.ShowAlert("error", "");
+          }
+        });
+      }
     }
     catch (err) {
       throw err;
@@ -183,7 +236,7 @@ export class EmployeesComponent implements OnInit {
       (await this.departmentService.GetDepartmentDropdown()).subscribe({
           next: (res) => {            
             this.DepartmentsList = JSON.parse(JSON.stringify(res));
-            console.log("Departments" + this.DepartmentsList)
+            //console.log("Departments" + this.DepartmentsList)
           },
           error: () => {
             this.swalservice.ShowAlert("error", "");
