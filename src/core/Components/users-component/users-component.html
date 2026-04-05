@@ -1,4 +1,4 @@
-<div class="card" *ngIf="DefaultView">
+<div class="card">
   <div class="card-header d-flex justify-content-between align-items-center m-1">
     <span>Users Details</span>
     <button class="btn btn-sm btn-primary" (click)="openForm('Add User', '')">Add</button>
@@ -58,72 +58,4 @@
       </mat-paginator>
     </div>
   </div>
-</div>
-
-<div class="card" *ngIf="!DefaultView">
-  <div class="card-header d-flex justify-content-between align-items-center">
-    <span class="fw-bold">{{HeaderText}}</span>
-    <button type="button" class="btn btn-sm btn-primary" (click)="toggleView()">X</button>
-  </div>
-  <div class="card-body">
-    <form [formGroup]="userForm">
-      <div class="row">
-        <div class="col">
-          <div class="form-floating mb-3">
-            <input class="form-control" placeholder="First Name" formControlName="firstName">
-            <label>First Name</label>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="form-floating mb-3">
-            <input class="form-control" placeholder="Last Name" formControlName="lastName">
-            <label>Last Name</label>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col">
-          <div class="form-floating mb-3">
-            <input class="form-control" placeholder="Phone" formControlName="phone">
-            <label for="phone">Phone</label>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col">
-          <div class="form-floating mb-3">
-            <select class="form-control" formControlName="roleId">
-              <option value="0" disabled selected>Select User Role</option>
-              <option *ngFor="let role of userRoles" [value]="role.dataValue">
-                {{ role.dataText}}
-              </option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-floating mb-3">
-        <input type="email" class="form-control" placeholder="Email"formControlName="roleId">
-        <label>Email</label>
-      </div>
-
-      <div class="form-floating mb-3" *ngIf="userModel.email && userModel.email.trim() !== ''">
-        <button class="btn btn-primary btn-sm">Verify Email</button>
-      </div>
-
-      <div class="form-floating mb-3">
-        <input type="password" class="form-control" placeholder="Password" formControlName="password" minlength="6">
-        <label>Password</label>
-      </div>
-
-      <button class="btn btn-success w-100 py-2" (click)="InsertData()">         
-        Create Account
-      </button>
-      <!-- [disabled]="userForm.invalid" -->
-    </form>
-  </div>
-
 </div>

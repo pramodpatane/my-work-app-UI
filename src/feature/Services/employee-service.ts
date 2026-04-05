@@ -23,7 +23,7 @@ export class EmployeeService {
 
   public async GetById(id: string) {
     try {
-      const apiurl = `${this.baseApiUrl}/GetEmployeeById/` + id;
+      const apiurl = `${this.baseApiUrl}/` + id;
       return await this.http.get(apiurl);
     }
     catch(err) {
@@ -33,7 +33,7 @@ export class EmployeeService {
 
   public async InsertData(data: EmployeeModel) {
     try {
-      const apiurl = `${this.baseApiUrl}/Create`;
+      const apiurl = `${this.baseApiUrl}`;
       return await this.http.post(apiurl, data);
     } catch (err) {
       throw err;
@@ -42,8 +42,8 @@ export class EmployeeService {
 
   public async UpdateData(data: any) {
     try {
-      const apiurl = `${this.baseApiUrl}/Update`;
-      return await this.http.post(apiurl, data);
+      const apiurl = `${this.baseApiUrl}`;
+      return await this.http.put(apiurl, data);
     } catch (err) {
       throw err;
     }
