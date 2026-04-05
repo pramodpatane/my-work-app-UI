@@ -14,7 +14,7 @@ export class EmailService {
     }
 
     public async GetEmailConfiguration(FormCode: string) {
-        const apiurl = `${this.baseApiUrl}/Email/GetEmailConfiguration/` + FormCode;
+        const apiurl = `${this.baseApiUrl}/Email/` + FormCode;
         return this.http.get(apiurl);
     }
 

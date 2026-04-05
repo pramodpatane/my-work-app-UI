@@ -11,3 +11,9 @@ export class UserModel {
     isEmailVerified: boolean = false;
     createdBy: string = "";
 }
+
+export class UserConfiguration {
+    isFormVisible: boolean = true;
+    formHeader: string = "Add User";
+    isFormHeaderShow: boolean = true;
+}

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, Output } from '@angular/core';
 import { LoginModel } from '../../Models/login-model';
 import { AuthService } from '../../Services/auth.service';
 import { Router } from '@angular/router';
@@ -10,12 +10,13 @@ import { SwalService } from '../../../global/swal.service';
 import { DropdownModel } from '../../Models/dropdown.model';
 import { EmailService } from '../../Services/email-service';
 import { EmailModel, VerifyOtpModel } from '../../Models/email.model';
-import { UserModel } from '../../Models/user-model';
+import { UserConfiguration, UserModel } from '../../Models/user-model';
 import { UserService } from '../../../core/Services/user-service';
+import { SignUp } from '../sign-up/sign-up';
 
 @Component({
   selector: 'app-login-component',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, SignUp],
   templateUrl: './login-component.html',
   styleUrl: './login-component.css',
 })
@@ -30,10 +31,10 @@ export class LoginComponent {
   IsPasswordEnabled: boolean = true;
   OTP: string = "";
   OTPSendMessage: string = "";
+  @Input() userConfiguration!: UserConfiguration;
 
   constructor(private authService: AuthService, private router: Router, private userRolesService: UserRolesService,
-    private emailService: EmailService, private swalservice: SwalService, private swalService: SwalService,
-    private userService: UserService
+    private emailService: EmailService, private swalService: SwalService, private userService: UserService
   ) {}
 
   ngOnInit() {
@@ -68,11 +69,11 @@ export class LoginComponent {
     try{
       let response = "";
       if(!this.loginModel.useremail) {
-        this.swalservice.ShowAlert("error", "Useremail is required");
+        this.swalService.ShowAlert("error", "Useremail is required");
         return;
       }
       if(!this.loginModel.password && !this.loginModel.isOtpVerified) {
-        this.swalservice.ShowAlert("error", "password is required");
+        this.swalService.ShowAlert("error", "password is required");
         return;
       }
       
@@ -106,8 +107,12 @@ export class LoginComponent {
     this.router.navigate(['/']);
   }
   
-  onSignup () {
-
+  openSignup () {
+    this.isLoginView = false;
+    this.userConfiguration = {
+      ...this.userConfiguration,
+      isFormHeaderShow: false
+    };
   }
 
   public async GetUserRolesDropdown() {
@@ -118,7 +123,7 @@ export class LoginComponent {
             //console.log("UserRolesList", this.userRoles);
           },
           error: () => {
-            this.swalservice.ShowAlert("error", "");
+            this.swalService.ShowAlert("error", "");
           }
         });
     }
@@ -136,7 +141,7 @@ export class LoginComponent {
             }         
           },
           error: () => {
-            this.swalservice.ShowAlert("error", "");
+            this.swalService.ShowAlert("error", "");
           }
         });
     }
@@ -149,28 +154,28 @@ export class LoginComponent {
     try {
        // Validate email configuration
     if (!this.emailConfiguration) {
-      this.swalservice.ShowAlert("error", "Email configuration not loaded");
+      this.swalService.ShowAlert("error", "Email configuration not loaded");
       return;
     }
 
     if (!this.emailConfiguration.FromEmail) {
-      this.swalservice.ShowAlert("error", "FromEmail is required");
+      this.swalService.ShowAlert("error", "FromEmail is required");
       return;
     }
 
     if (!this.emailConfiguration.Subject) {
-      this.swalservice.ShowAlert("error", "Subject is required");
+      this.swalService.ShowAlert("error", "Subject is required");
       return;
     }
 
     if (!this.emailConfiguration.Body) {
-      this.swalservice.ShowAlert("error", "Body is required");
+      this.swalService.ShowAlert("error", "Body is required");
       return;
     }
 
     // Validate user email
     if (!this.loginModel || !this.loginModel.useremail) {
-      this.swalservice.ShowAlert("error", "User email is required");
+      this.swalService.ShowAlert("error", "User email is required");
       return;
     }
 
@@ -188,7 +193,7 @@ export class LoginComponent {
             }
           },
           error: () => {
-            this.swalservice.ShowAlert("error", "");
+            this.swalService.ShowAlert("error", "");
           }
         });
     }
@@ -215,7 +220,7 @@ export class LoginComponent {
             }            
           },
           error: () => {
-            this.swalservice.ShowAlert("error", "Invalid email or OTP!");
+            this.swalService.ShowAlert("error", "Invalid email or OTP!");
             // to clear fields
             this.ClearFormFields();
           }

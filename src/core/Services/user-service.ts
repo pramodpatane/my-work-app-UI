@@ -15,11 +15,11 @@ export class UserService {
 
   GetUserData(data: any) {
     const apiurl = `${this.baseApiUrl}/GetUsers`;
-    return this.http.post(apiurl, data);
+    return this.http.get(apiurl, data);
   }
 
   Insert(userModel: UserModel) {
-    const apiurl = `${this.baseApiUrl}/Create`;
+    const apiurl = `${this.baseApiUrl}`;
     return this.http.post(apiurl, userModel);
   }
 
