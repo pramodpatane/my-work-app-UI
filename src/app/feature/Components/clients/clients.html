@@ -1,0 +1,212 @@
+<div class="card" *ngIf="IsDefaultView">
+  <div style="background-color: #1e293b;" class="card-header d-flex justify-content-between align-items-center">
+    <span style="color: #ffffff;" class="fw-bold">Farmers Details</span>
+
+    <!-- <mat-form-field appearance="outline">
+      <input matInput [matDatepicker]="picker" [(ngModel)]="fromDate">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field> -->
+    <div></div>
+
+    <button type="button" class="btn btn-sm btn-primary" (click)="OpenForm()">Add</button>
+  </div>
+
+  <div class="card-body">
+    <div class="row border border-solid">
+      <div class="table-container">
+        <table mat-table [dataSource]="clientsData" class="mat-elevation-z8">
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let row">
+              <button mat-icon-button class="text-primary" (click)="Edit(row.recordId)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button class="text-danger" (click)="Delete(row.recordId)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="clientCode">
+            <th mat-header-cell *matHeaderCellDef>Farmer Code</th>
+            <td mat-cell *matCellDef="let row">{{ row.clientCode }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Name</th>
+            <td mat-cell *matCellDef="let row">{{ row.name }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="clientType">
+            <th mat-header-cell *matHeaderCellDef>Farmer Type</th>
+            <td mat-cell *matCellDef="let row">{{ row.clientType }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef>Email</th>
+            <td mat-cell *matCellDef="let row">{{ row.email }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="contactPerson">
+            <th mat-header-cell *matHeaderCellDef>Contact Person</th>
+            <td mat-cell *matCellDef="let row">{{ row.contactPerson }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="mobile">
+            <th mat-header-cell *matHeaderCellDef>Mobile</th>
+            <td mat-cell *matCellDef="let row">{{ row.mobile }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="alternateMobile">
+            <th mat-header-cell *matHeaderCellDef>Alternate Mobile</th>
+            <td mat-cell *matCellDef="let row">{{ row.alternateMobile }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="createdDate">
+            <th mat-header-cell *matHeaderCellDef>Created Date</th>
+            <td mat-cell *matCellDef="let row">{{ row.createdDate }}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+
+      <mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 20, 50, 100]" (page)="onPageChange($event)"
+        showFirstLastButtons>
+      </mat-paginator>
+    </div>
+  </div>
+</div>
+
+<div class="card" *ngIf="!IsDefaultView">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <span class="fw-bold">{{HeaderText}}</span>
+    <button type="button" class="btn btn-sm btn-primary" (click)="toggleIsDefaultView()">X</button>
+  </div>
+  <div class="card-body">
+
+
+    <form [formGroup]="clientForm">
+
+      <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-6">
+          <div class="mb-3">
+            <label>Name</label>
+            <input type="text" class="form-control" formControlName="name" />
+            <!-- <small class="text-danger" *ngIf="form.firstName.touched && form.firstName.invalid">
+              First Name is required
+            </small> -->
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-6">
+          <div class="mb-3">
+            <label>Farmer Type</label>
+            <input type="text" class="form-control" formControlName="clientType" />
+            <!-- <small class="text-danger" *ngIf="form.lastName.touched && form.lastName.invalid">
+              Last Name is required
+            </small> -->
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-6">
+          <div class="mb-3">
+            <label>Email</label>
+            <input type="email" class="form-control" formControlName="email" />
+            <!-- <small class="text-danger" *ngIf="form.email.touched && form.email.invalid">
+              Valid Email is required
+            </small> -->
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-6">
+          <div class="mb-3">
+            <label>Farmer Code</label>
+            <input type="text" class="form-control" formControlName="clientCode" />
+            <!-- <small class="text-danger" *ngIf="form.clientCode.touched && form.clientCode.invalid">
+              Farmer Code must be a number
+            </small> -->
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-6">
+          <div class="mb-3">
+            <label>Category</label>
+            <input type="text" class="form-control" formControlName="category" />
+            <!-- <small class="text-danger" *ngIf="form.category.touched && form.category.invalid">
+              Category is required
+            </small> -->
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-6">
+          <div class="mb-3">
+            <label>Contact Person</label>
+            <input type="text" class="form-control" formControlName="contactPerson" />
+            <!-- <small class="text-danger" *ngIf="form.contactPerson.touched && form.contactPerson.invalid">
+              Contact Person is required
+            </small> -->
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-6">
+          <div class="mb-3">
+            <label>Mobile</label>
+            <input type="tel" class="form-control" formControlName="mobile" />
+            <!-- <small class="text-danger" *ngIf="form.mobile.touched && form.mobile.invalid">
+              Mobile number is required
+            </small> -->
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-6">
+          <div class="mb-3">
+            <label>Alternate Mobile</label>
+            <input type="tel" class="form-control" formControlName="alternateMobile" />
+            <!-- <small class="text-danger" *ngIf="form.alternateMobile.touched && form.alternateMobile.invalid">
+              Alternate Mobile number is required
+            </small> -->
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <div class="mb-3">
+                <label>Address</label>
+                <input type="text" class="form-control" formControlName="address" />
+                <!-- <small class="text-danger" *ngIf="form.address.touched && form.address.invalid">
+                Address is required
+                </small> -->
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-6 col-lg-6">
+          <div class="form-check mb-2">
+            <input class="form-check-input selected" type="checkbox" formControlName="isActive" />
+            <label class="form-check-label">Is Active</label>
+          </div>
+
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" formControlName="isDeleted" />
+            <label class="form-check-label">Is Deleted</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="" *ngIf="ButtonText == 'Insert'">
+        <button class="btn btn-primary" (click)="Insert()">{{ButtonText}}</button>
+      </div>
+
+      <div class="" *ngIf="ButtonText == 'Update'">
+        <button class="btn btn-primary" (click)="Update()">{{ButtonText}}</button>
+      </div>
+    </form>
+  </div>
+</div>

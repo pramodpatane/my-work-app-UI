@@ -1,0 +1,244 @@
+<!-- <div class="card">
+  <div class="card-header d-flex justify-content-between align-items-center" *ngIf="userConfiguration.isFormHeaderShow">
+    <span class="fw-bold">{{userConfiguration.formHeader}}</span>
+    <button type="button" class="btn btn-sm btn-primary" (click)="toggleView()">X</button>
+  </div>
+  <div class="card-body">
+    <form [formGroup]="userForm">
+      <div class="row">
+        <div class="col">
+          <div class="form-floating mb-3">
+            <input class="form-control" placeholder="First Name" formControlName="firstName">
+            <label>First Name</label>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="form-floating mb-3">
+            <input class="form-control" placeholder="Last Name" formControlName="lastName">
+            <label>Last Name</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <div class="form-floating mb-3">
+            <input class="form-control" placeholder="Phone" formControlName="phone">
+            <label for="phone">Phone</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <div class="form-floating mb-3">
+            <select class="form-control" formControlName="roleId">
+              <option value="0" disabled selected>Select User Role</option>
+              <option *ngFor="let role of userRoles" [value]="role.dataValue">
+                {{ role.dataText}}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-floating mb-3">
+        <input type="email" class="form-control" placeholder="Email"formControlName="roleId">
+        <label>Email</label>
+      </div>
+
+      <div class="form-floating mb-3" *ngIf="userModel.email && userModel.email.trim() !== ''">
+        <button class="btn btn-primary btn-sm">Verify Email</button>
+      </div>
+
+      <div class="form-floating mb-3">
+        <input type="password" class="form-control" placeholder="Password" formControlName="password" minlength="6">
+        <label>Password</label>
+      </div>
+
+      <button [disabled]="userForm.invalid" class="btn btn-success w-100 py-2" (click)="InsertData()">         
+        Create Account
+      </button>
+    </form>
+  </div>
+
+</div> -->
+
+<!-- register.component.html -->
+
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-10">
+    
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+        <div class="row g-4 align-items-start">
+
+          <!-- Left Form -->
+          <div class="col-lg-9">
+
+            <div class="row g-4">
+
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">
+                  First Name <span class="text-danger">*</span>
+                </label>
+
+                <input type="text" class="form-control custom-input" formControlName="firstName">
+
+                <small class="text-danger" *ngIf="submitted && f['firstName'].errors">
+                  First name is required
+                </small>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">
+                  Last Name <span class="text-danger">*</span>
+                </label>
+
+                <input type="text" class="form-control custom-input" formControlName="lastName">
+
+                <small class="text-danger" *ngIf="submitted && f['lastName'].errors">
+                  Last name is required
+                </small>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">
+                  Display Name <span class="text-danger">*</span>
+                </label>
+
+                <input type="text" class="form-control custom-input" formControlName="displayName">
+
+                <small class="text-danger" *ngIf="submitted && f['displayName'].errors">
+                  Display name is required
+                </small>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">
+                  Job Title <span class="text-danger">*</span>
+                </label>
+
+                <input type="text" class="form-control custom-input" formControlName="jobTitle">
+
+                <small class="text-danger" *ngIf="submitted && f['jobTitle'].errors">
+                  Job title is required
+                </small>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Image Upload -->
+          <div class="col-lg-3">
+            <div class="upload-box text-center">
+
+              <input type="file" hidden #fileInput (change)="onFileSelected($event)">
+
+              <div (click)="fileInput.click()" class="cursor-pointer">
+
+                <div *ngIf="!previewImage">
+                  <h6 class="mb-3">Select Image</h6>
+
+                  <i class="bi bi-image fs-1 text-secondary"></i>
+                </div>
+
+                <img *ngIf="previewImage" [src]="previewImage" class="img-fluid rounded-3 preview-img">
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Email & Mobile -->
+        <div class="row g-4 mb-4">
+
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">
+              Email Address <span class="text-danger">*</span>
+            </label>
+
+            <input type="email" class="form-control custom-input" formControlName="email">
+
+            <small class="text-danger" *ngIf="submitted && f['email'].errors">
+              Valid email is required
+            </small>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">
+              Mobile No. <span class="text-danger">*</span>
+            </label>
+
+            <input type="text" class="form-control custom-input" formControlName="mobile">
+
+            <small class="text-danger" *ngIf="submitted && f['mobile'].errors">
+              Mobile number is required
+            </small>
+          </div>
+
+        </div>
+
+        <!-- Password -->
+        <div class="row g-4 mb-4">
+
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">
+              Password <span class="text-danger">*</span>
+            </label>
+
+            <div class="position-relative">
+
+              <input [type]="showPassword ? 'text' : 'password'" class="form-control custom-input pe-5"
+                formControlName="password">
+
+              <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'" (click)="showPassword = !showPassword">
+              </i>
+
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">
+              Confirm Password <span class="text-danger">*</span>
+            </label>
+
+            <div class="position-relative">
+
+              <input [type]="showConfirmPassword ? 'text' : 'password'" class="form-control custom-input pe-5"
+                formControlName="confirmPassword">
+
+              <i class="bi" [ngClass]="showConfirmPassword ? 'bi-eye-slash' : 'bi-eye'"
+                (click)="showConfirmPassword = !showConfirmPassword">
+              </i>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Checkbox -->
+        <div class="form-check mb-4">
+          <input class="form-check-input" type="checkbox" formControlName="terms">
+
+          <label class="form-check-label">
+            I agree to the
+            <a href="#" class="text-decoration-none">Terms of Service</a>
+            and
+            <a href="#" class="text-decoration-none">Privacy Policy</a>
+          </label>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn btn-primary w-100 rounded-pill py-3 fw-semibold">
+          Create account
+        </button>
+
+      </form>
+
+    </div>
+  </div>
+</div>

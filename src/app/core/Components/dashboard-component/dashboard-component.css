@@ -1,0 +1,33 @@
+/* .dashboard-card {
+  border-radius: 15px;
+  transition: .3s;
+  cursor: pointer;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+}
+
+.card {
+  border-radius: 15px;
+}
+
+.card-header {
+  font-weight: 600;
+}
+
+.table th {
+  white-space: nowrap;
+}
+
+@media(max-width:768px){
+
+  .dashboard-card h2 {
+    font-size: 1.5rem;
+  }
+
+  .table {
+    font-size: 13px;
+  }
+
+} */

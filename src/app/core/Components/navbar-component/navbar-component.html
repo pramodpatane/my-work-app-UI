@@ -1,0 +1,152 @@
+<!-- Mobile Overlay -->
+<div class="overlay" *ngIf="isMobileMenuOpen" (click)="toggleMobileMenu()">
+</div>
+
+<div class="sidebar" [class.collapsed]="isCollapsed" [class.mobile-open]="isMobileMenuOpen">
+
+  <!-- Logo -->
+  <div class="logo-section">
+    <mat-icon>dashboard</mat-icon>
+    <span *ngIf="!isCollapsed">Admin Panel</span>
+  </div>
+
+  <!-- Menus -->
+  <ul class="menu-list">
+
+    <li *ngFor="let menu of menus">
+
+      <!-- Menu without children -->
+      <a *ngIf="!menu.children" [routerLink]="menu.link" routerLinkActive="active" class="menu-item"
+        (click)="closeMobileMenu()">
+
+        <div class="menu-left">
+          <i [class]="menu.icon"></i>
+
+          <span *ngIf="!isCollapsed">
+            {{ menu.title }}
+          </span>
+        </div>
+
+      </a>
+
+      <!-- Menu with children -->
+      <div *ngIf="menu.children">
+
+        <div class="menu-item" (click)="toggleMenu(menu)">
+
+          <div class="menu-left">
+            <i [class]="menu.icon"></i>
+
+            <span *ngIf="!isCollapsed">
+              {{ menu.title }}
+            </span>
+          </div>
+
+          <i *ngIf="!isCollapsed" class="bi" [ngClass]="menu.expanded
+            ? 'bi-chevron-down'
+            : 'bi-chevron-right'">
+          </i>
+
+        </div>
+
+        <!-- Sub Menu -->
+        <ul *ngIf="menu.expanded && !isCollapsed" class="submenu">
+
+          <li *ngFor="let child of menu.children">
+
+            <a [routerLink]="child.link" routerLinkActive="active" (click)="closeMobileMenu()">
+
+              <i [class]="child.icon"></i>
+
+              <span>
+                {{ child.title }}
+              </span>
+
+            </a>
+
+          </li>
+
+        </ul>
+
+      </div>
+
+    </li>
+
+  </ul>
+
+</div>
+
+<!-- Main Content -->
+
+<div class="main-content" [class.expanded]="isCollapsed">
+
+  <div class="topbar d-flex align-items-center w-100 bg-secondary">
+
+    <div class="topbar-left">
+      <button class="menu-btn" (click)="toggleMobileMenu()">
+        <mat-icon style="color: #fff;">menu</mat-icon>
+      </button>
+      <button class="collapse-btn" (click)="toggleSidebar()">
+        <mat-icon style="color: #fff;">menu</mat-icon>
+      </button>    
+    </div>
+
+    <div class="ms-auto">
+
+      <div class="dropdown">
+
+        <a class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+          href="#"
+          role="button"
+          data-bs-toggle="dropdown"
+          aria-expanded="false">
+
+          <span class="me-2">
+            {{ userName }}
+          </span>
+
+          <i class="bi bi-person-circle fs-4"></i>
+
+        </a>
+
+        <ul class="dropdown-menu dropdown-menu-end shadow">
+
+          <li *ngIf="userRole === 'Superadmin'">
+            <a class="dropdown-item" routerLink="/core/users">
+              <i class="bi bi-people me-2"></i>
+              Users
+            </a>
+          </li>
+
+          <li>
+            <a class="dropdown-item" routerLink="/user-settings">
+              <i class="bi bi-gear me-2"></i>
+              User Settings
+            </a>
+          </li>
+
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+
+          <li>
+            <a class="dropdown-item text-danger"
+              style="cursor:pointer"
+              (click)="logout()">
+
+              <i class="bi bi-box-arrow-right me-2"></i>
+              Logout
+
+            </a>
+          </li>
+
+        </ul>
+
+      </div>
+
+    </div>
+  </div>
+
+  <router-outlet></router-outlet>
+
+</div>
