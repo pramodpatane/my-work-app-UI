@@ -9,19 +9,19 @@ export const routes: Routes = [
     { 
         path: "",
         loadComponent: () => 
-            import('../auth/Components/login-component/login-component')
+            import('../app/auth/Components/login-component/login-component')
             .then(m => m.LoginComponent)
     },
     {
-        path: "core",
+        path: "",
         loadChildren: () => 
-            import('../core/core.routes')
+            import('../app/core/core.routes')
             .then(m => m.Core_Routes)
     },
     {
-        path: "feature",
+        path: "",
         loadChildren: () => 
-            import('../feature/feature.route')
+            import('../app/feature/feature.route')
             .then(m => m.Feature_Routes)
     },
     // Fallback

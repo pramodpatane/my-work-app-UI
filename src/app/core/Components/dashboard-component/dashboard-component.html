@@ -1,0 +1,200 @@
+<div class="card">
+    <div style="background-color: #1e293b;" class="card-header d-flex justify-content-between align-items-center">
+        <span style="color: #ffffff;" class="fw-bold">🥛 Dairy Dashboard - Welcome to Dairy Management System</span>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row g-3">
+        <div class="col-xl-3 col-sm-6 col-md-6">
+            <div class="card dashboard-card shadow-lg border-0">
+                <div class="card-body">
+                    <h6>Total Farmers</h6>
+                    <h2>45</h2>
+                    <small class="text-success">
+                        +15 This Month
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-sm-6 col-md-6">
+            <div class="card dashboard-card shadow-lg border-0">
+                <div class="card-body">
+                    <h6>Milk Collection</h6>
+                    <h2>320 L</h2>
+                    <small class="text-primary">
+                        Today
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-sm-6 col-md-6">
+            <div class="card dashboard-card shadow-lg border-0">
+                <div class="card-body">
+                    <h6>Total Sales</h6>
+                    <h2>₹8000</h2>
+                    <small class="text-success">
+                        +8%
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-sm-6 col-md-6">
+            <div class="card dashboard-card shadow-lg border-0">
+                <div class="card-body">
+                    <h6>Revenue</h6>
+                    <h2>₹1.5L</h2>
+                    <small class="text-success">
+                        This Month
+                    </small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Charts Row -->
+
+    <div class="row mt-4 g-3">
+
+        <div class="col-xl-8 col-sm-6 col-md-6">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-white">
+                    Milk Collection Trend
+                </div>
+                <div class="card-body">
+                    <canvas id="collectionChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-sm-6 col-md-6">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-white">
+                    Collection Summary
+                </div>
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Morning</span>
+                        <strong>480 L</strong>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Evening</span>
+                        <strong>450 L</strong>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <span>Avg Fat</span>
+                        <strong>4.2%</strong>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Tables -->
+
+    <div class="row mt-4 g-3">
+
+        <div class="col-lg-8">
+
+            <div class="card shadow-lg border-0">
+
+                <div class="card-header bg-white">
+                    Recent Milk Collections
+                </div>
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover mb-0">
+
+                        <thead>
+                            <tr>
+                                <th>Farmer</th>
+                                <th>Milk(L)</th>
+                                <th>Fat</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+                                <td>Rahul Patil</td>
+                                <td>50</td>
+                                <td>4.3%</td>
+                                <td>₹2,300</td>
+                            </tr>
+
+                            <tr>
+                                <td>Amit Jadhav</td>
+                                <td>35</td>
+                                <td>4.1%</td>
+                                <td>₹1,650</td>
+                            </tr>
+
+                            <tr>
+                                <td>Sachin More</td>
+                                <td>65</td>
+                                <td>4.4%</td>
+                                <td>₹3,100</td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-4">
+
+            <div class="card shadow-lg border-0">
+
+                <div class="card-header bg-white">
+                    Low Stock Products
+                </div>
+
+                <ul class="list-group list-group-flush">
+
+                    <li class="list-group-item">
+                        Milk Packet
+                        <span class="badge bg-danger float-end">
+                            10
+                        </span>
+                    </li>
+
+                    <li class="list-group-item">
+                        Butter
+                        <span class="badge bg-warning float-end">
+                            15
+                        </span>
+                    </li>
+
+                    <li class="list-group-item">
+                        Ghee
+                        <span class="badge bg-danger float-end">
+                            5
+                        </span>
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

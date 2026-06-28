@@ -1,0 +1,55 @@
+/* register.component.scss */
+
+.custom-input {
+  height: 56px;
+  border-radius: 12px;
+  border: 1px solid #dce1e7;
+  font-size: 15px;
+}
+
+.custom-input:focus {
+  box-shadow: none;
+  border-color: #0d6efd;
+}
+
+.upload-box {
+  border: 1px solid #dce1e7;
+  border-radius: 16px;
+  height: 190px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fff;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.preview-img {
+  max-height: 160px;
+  object-fit: cover;
+}
+
+.bi-eye,
+.bi-eye-slash {
+  position: absolute;
+  right: 16px;
+  top: 18px;
+  cursor: pointer;
+  color: #7d8793;
+}
+
+button.btn-primary {
+  height: 56px;
+  font-size: 17px;
+}
+
+@media (max-width: 991px) {
+
+  .upload-box {
+    height: auto;
+    padding: 30px;
+  }
+
+}
