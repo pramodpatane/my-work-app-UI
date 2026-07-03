@@ -15,7 +15,7 @@ import { FilterData } from '../../../app/core/Models/FilterData';
   selector: 'app-users-component',
   imports: [MatTableModule, MatPaginatorModule, MatIconModule, ReactiveFormsModule, FormsModule, CommonModule],
   templateUrl: './users-component.html',
-  //styleUrl: './users-component.css',
+  styleUrl: './users-component.css',
 })
 
 export class UsersComponent implements OnInit, AfterViewInit {
