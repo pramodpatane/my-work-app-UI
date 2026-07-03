@@ -1,18 +1,18 @@
 import { Component, Input, Output } from '@angular/core';
-import { LoginModel } from '../../Models/login-model';
-import { AuthService } from '../../Services/auth.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { UserRolesService } from '../../../core/Services/user.roles.service';
-import { SwalService } from '../../../global/swal.service';
-import { DropdownModel } from '../../Models/dropdown.model';
 import { EmailService } from '../../Services/email-service';
-import { EmailModel, VerifyOtpModel } from '../../Models/email.model';
 import { UserConfiguration, UserModel } from '../../Models/user-model';
 import { UserService } from '../../../core/Services/user-service';
 import { SignUp } from '../sign-up/sign-up';
+import { LoginModel } from '../../../app/auth/Models/login-model';
+import { DropdownModel } from '../../../app/auth/Models/dropdown.model';
+import { AuthService } from '../../../app/auth/Services/auth.service';
+import { UserRolesService } from '../../../app/core/Services/user.roles.service';
+import { SwalService } from '../../../app/global/swal.service';
+import { EmailModel, VerifyOtpModel } from '../../../app/auth/Models/email.model';
 
 @Component({
   selector: 'app-login-component',
