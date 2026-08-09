@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { UserRolesService } from '../../../core/Services/user.roles.service';
-import { DropdownModel } from '../../Models/dropdown.model';
-import { SwalService } from '../../../global/swal.service';
 import { UserConfiguration, UserModel } from '../../Models/user-model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { DropdownModel } from '../../../app/auth/Models/dropdown.model';
+import { UserRolesService } from '../../../app/core/Services/user.roles.service';
+import { SwalService } from '../../../app/global/swal.service';
 
 @Component({
   selector: 'app-sign-up',

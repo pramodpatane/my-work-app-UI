@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { EmailModel, VerifyOtpModel } from "../Models/email.model";
+import { EmailModel, VerifyOtpModel } from "../../app/auth/Models/email.model";
 
 @Injectable({
     providedIn: "root"

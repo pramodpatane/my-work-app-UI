@@ -2,15 +2,14 @@ import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, Output, Vie
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
-import { SwalService } from '../../../global/swal.service';
 import { UserService } from '../../Services/user-service';
-import { FilterData } from '../../Models/FilterData';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { UserConfiguration, UserModel } from '../../../auth/Models/user-model';
-import { UserRolesService } from '../../Services/user.roles.service';
-import { DropdownModel } from '../../../auth/Models/dropdown.model';
 import { SignUp } from '../../../auth/Components/sign-up/sign-up';
+import { DropdownModel } from '../../../app/auth/Models/dropdown.model';
+import { SwalService } from '../../../app/global/swal.service';
+import { FilterData } from '../../../app/core/Models/FilterData';
 
 @Component({
   selector: 'app-users-component',

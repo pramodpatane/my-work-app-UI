@@ -1,8 +1,7 @@
-import { Component, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { LoginModel } from '../../Models/login-model';
 import { AuthService } from '../../Services/auth.service';
 import { Router } from '@angular/router';
-import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { UserRolesService } from '../../../core/Services/user.roles.service';
@@ -13,6 +12,7 @@ import { EmailModel, VerifyOtpModel } from '../../Models/email.model';
 import { UserConfiguration, UserModel } from '../../Models/user-model';
 import { UserService } from '../../../core/Services/user-service';
 import { SignUp } from '../sign-up/sign-up';
+import { MenuService } from '../../../core/Services/menu.service';
 
 @Component({
   selector: 'app-login-component',
@@ -27,6 +27,7 @@ export class LoginComponent {
   showPassword: boolean = false;
   isOTPEnabled: boolean = false;
   userRoles: DropdownModel[] = [];
+  userGuid: string = "";
   emailConfiguration: any;
   IsPasswordEnabled: boolean = true;
   OTP: string = "";
@@ -34,7 +35,8 @@ export class LoginComponent {
   @Input() userConfiguration!: UserConfiguration;
 
   constructor(private authService: AuthService, private router: Router, private userRolesService: UserRolesService,
-    private emailService: EmailService, private swalService: SwalService, private userService: UserService
+    private emailService: EmailService, private swalService: SwalService, private userService: UserService,
+    private menuService: MenuService,
   ) {}
 
   ngOnInit() {
@@ -65,7 +67,7 @@ export class LoginComponent {
     }
   }
 
-  public onLogin() {
+  public async onLogin() {
     try{
       let response = "";
       if(!this.loginModel.useremail) {
@@ -78,14 +80,30 @@ export class LoginComponent {
       }
       
       this.authService.login(this.loginModel).subscribe({
-        next: (res) => {
+        next: async (res) => {
           response = JSON.stringify(res);
           if(JSON.parse(response).isSuccess == true) {
             localStorage.setItem("UserData", response);
             localStorage.setItem("IsUserLoggedIn", "True");
             this.authService.startTokenTimer();
 
-            this.router.navigate(['dashboard']);   // navigate to navbar
+            this.userGuid = JSON.parse(localStorage.getItem("UserData") || '{}').recordId;
+            if(this.userGuid) {
+              //this.router.navigate(['dashboard']);   // navigate to navbar
+              (await this.menuService.GetUserMenus(this.userGuid)).subscribe({
+                next: (res) => {            
+                  let response = JSON.parse(JSON.stringify(res));                  
+                  const firstMenu = response.find((m: { link: any; }) => m.link);
+                  if (firstMenu) {
+                    this.router.navigate([firstMenu.link]);
+                  }
+                  else {
+                    this.router.navigate(['/no-access']);
+                    return;
+                  }
+                },
+              });
+            }
           }
           else {
             this.swalService.ShowAlert("error", JSON.parse(response).message);

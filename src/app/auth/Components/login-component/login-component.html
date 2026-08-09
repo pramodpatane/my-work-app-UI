@@ -1,119 +1,178 @@
-<div class="container min-vh-100 d-flex align-items-center justify-content-center">
-  <div class="card auth-card shadow-lg border-0 overflow-hidden mt-3 mb-3">
+<div class="container-fluid min-vh-100 p-0">
 
-    <div class="row g-0">
+  <div class="row g-0 min-vh-100">
 
-      <!-- LEFT BRANDING PANEL -->
-      <div class="col-md-6 d-none d-md-flex auth-left">
-        <div class="text-white p-5 d-flex flex-column justify-content-center w-100">
-          
-          <img src="assets/logo.png" class="logo mb-4" alt="Logo">
+    <div class="col-md-6 d-none d-md-flex bg-primary text-white
+             align-items-center justify-content-center p-5">
 
-          <h2 class="fw-bold">
-            {{ isLoginView ? 'Welcome Back!' : 'Join Us Today' }}
-          </h2>
+      <div class="w-100" style="max-width: 520px;">
 
-          <p class="mt-3 opacity-75">
-            {{ isLoginView 
-              ? 'Login to access your dashboard and manage your account.' 
-              : 'Create an account and start your journey with us.' }}
-          </p>
-        </div>
+        <img src="assets/logo.png" class="img-fluid mb-4" style="max-width: 150px;" alt="Logo" />
+
+        <h1 class="fw-bold display-5 mb-3">
+          {{ isLoginView ? 'Welcome Back!' : 'Join Us Today' }}
+        </h1>
+
+        <p class="lead opacity-75">
+          {{ isLoginView
+          ? 'Login to access your dashboard and manage your account.'
+          : 'Create an account and start your journey with us.' }}
+        </p>
+
       </div>
 
-      <!-- RIGHT FORM PANEL -->
-      <div class="col-md-6">
-        <div class="card-body p-4 p-lg-4">
+    </div>
 
-          <h4 class="fw-bold mb-4 text-center">
-            {{ isLoginView ? 'Sign In' : 'Sign Up' }}
-          </h4>
+    <div class="col-12 col-md-6 d-flex
+             align-items-center justify-content-center
+             bg-light p-3 p-md-5">
 
-          <!-- LOGIN FORM -->
-          <form *ngIf="isLoginView" #loginForm="ngForm">
+      <div class="w-100 bg-white rounded-4 shadow-sm px-2 py-4">
+
+        <div *ngIf="isLoginView">
+
+          <div class="text-center mb-4">
+
+            <h2 class="fw-bold mb-2">
+              Sign In
+            </h2>
+
+            <p class="text-muted mb-0">
+              Welcome back! Please login to your account.
+            </p>
+
+          </div>
+
+
+          <form #loginForm="ngForm">
 
             <div class="form-floating mb-3">
-              <input type="useremail" class="form-control"
-                    [(ngModel)]="loginModel.useremail"
-                    name="useremail" ngModel required placeholder="Email">
-              <label>Email</label>
+
+              <input type="email" class="form-control" [(ngModel)]="loginModel.useremail" name="useremail" required
+                placeholder="Email" />
+
+              <label>Email Address</label>
+
             </div>
 
-            <div class="row mb-3">
-              <div class="col-md-6 d-flex align-items-center">
-                <input type="radio" name="LoginType" id="IsPassword" checked class="me-2" (click)="IsChecked($event,'IsPassword')">
-                <label for="IsPassword" class="me-3 mb-0">Password</label>
+            <div class="row g-2 mb-3">
+
+              <div class="col-6">
+
+                <label class="border rounded-3 p-3 w-100
+                         d-flex align-items-center
+                         gap-2" style="cursor: pointer;">
+
+                  <input type="radio" class="form-check-input m-0" name="LoginType" id="IsPassword" checked
+                    (click)="IsChecked($event, 'IsPassword')" />
+
+                  <span>Password</span>
+
+                </label>
+
               </div>
 
-              <div class="col-md-6 d-flex align-items-center">
-                <input type="radio" name="LoginType" id="IsOtp" class="me-2" (click)="IsChecked($event,'IsOtp')">
-                <label for="IsOtp" class="me-3 mb-0">OTP</label>                
+
+              <div class="col-6">
+
+                <label class="border rounded-3 p-3 w-100
+                         d-flex align-items-center
+                         gap-2" style="cursor: pointer;">
+
+                  <input type="radio" class="form-check-input m-0" name="LoginType" id="IsOtp"
+                    (click)="IsChecked($event, 'IsOtp')" />
+
+                  <span>OTP</span>
+
+                </label>
+
               </div>
+
             </div>
 
-            <div class="row mb-3 d-flex" *ngIf="isOTPEnabled && !IsPasswordEnabled">
-              <div class="col-md-6">
-                <button class="btn btn-primary btn-sm" (click)="SendOTP()">Send OTP</button>
-              </div>
-              <div class="col-md-6">
-                <p>{{OTPSendMessage}}</p>
-              </div>
+            <div class="d-flex flex-column flex-sm-row
+                     align-items-sm-center gap-2 mb-3" *ngIf="isOTPEnabled && !IsPasswordEnabled">
+
+              <button type="button" class="btn btn-primary" (click)="SendOTP()">
+                Send OTP
+              </button>
+
+              <small class="text-success">
+                {{ OTPSendMessage }}
+              </small>
             </div>
 
-            <div class="form-floating mb-3 position-relative" *ngIf="isOTPEnabled && !IsPasswordEnabled">
-              <div class="row">
-                <div class="col-md-6">
-                  <input class="form-control"
-                     [(ngModel)]="OTP"
-                     name="otp" ngModel required minlength="6"
-                     placeholder="Enter OTP">
-                </div>
-                <div class="col-md-6">
-                  <button class="btn btn-secondary btn-sm" (click)="VerifyOTP()">Verify OTP</button>
-                </div>
+            <div class="row g-2 mb-3" *ngIf="isOTPEnabled && !IsPasswordEnabled">
+
+              <div class="col-12 col-sm-8">
+
+                <input type="text" class="form-control form-control-lg" [(ngModel)]="OTP" name="otp" required
+                  minlength="6" maxlength="6" placeholder="Enter OTP" />
+
               </div>
-              
+              <div class="col-12 col-sm-4">
+                <button type="button" class="btn btn-secondary btn-lg w-100" (click)="VerifyOTP()">
+                  Verify
+                </button>
+              </div>
             </div>
 
             <div class="form-floating mb-3 position-relative" *ngIf="IsPasswordEnabled && !isOTPEnabled">
-              <input class="form-control"
-                     [type]="showPassword ? 'text' : 'password'"
-                     [(ngModel)]="loginModel.password"
-                     name="password" ngModel required minlength="6"
-                     placeholder="Password">
-              <label>Password</label>
 
-              <span class="toggle-password" (click)="togglePassword()">
-                <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
-              </span>
+              <input class="form-control" [type]="showPassword ? 'text' : 'password'" [(ngModel)]="loginModel.password"
+                name="password" required minlength="6" placeholder="Password" />
+
+              <label>Password</label>
+              <button type="button" class="btn position-absolute top-50 end-0
+                       translate-middle-y border-0" (click)="togglePassword()" tabindex="-1">
+                <i class="bi" [ngClass]="
+                    showPassword
+                      ? 'bi-eye-slash'
+                      : 'bi-eye'
+                  "></i>
+              </button>
             </div>
 
-            <button class="btn btn-primary w-100 py-2" (click)="onLogin()" [disabled]="loginForm.invalid" *ngIf="IsPasswordEnabled && !isOTPEnabled">
+            <button type="button" class="btn btn-primary btn-lg w-100" (click)="onLogin()"
+              [disabled]="loginForm.invalid" *ngIf="IsPasswordEnabled && !isOTPEnabled">
               Login
             </button>
 
-            <p class="text-center mt-3">
-              Don’t have an account?
-              <a href="#" (click)="openSignup()">Sign up</a>
+            <p class="text-center text-muted mt-4 mb-0">
+              Don't have an account?
+              <a href="#" class="text-primary text-decoration-none
+                       fw-semibold" (click)="openSignup(); $event.preventDefault()">
+                Sign up
+              </a>
             </p>
           </form>
+        </div>
 
-          <!-- SIGNUP FORM -->
-          <div *ngIf="!isLoginView">
-            <app-sign-up [userConfiguration]="userConfiguration"></app-sign-up>
-            <div class="text-center">        
-              <p class="mb-0">
-                Already have an account?
-                <a href="#" class="text-primary text-decoration-none fw-semibold">
-                  Sign in
-                </a>
-              </p>
-            </div>
-            
+        <div *ngIf="!isLoginView">
+
+          <div class="text-center mb-4">
+            <h2 class="fw-bold mb-2">
+              Create Account
+            </h2>
+            <p class="text-muted mb-0">
+              Create your account to get started.
+            </p>
+          </div>
+
+          <app-sign-up [userConfiguration]="userConfiguration">
+          </app-sign-up>
+
+          <div class="text-center mt-4">
+            <p class="mb-0 text-muted">
+              Already have an account?
+              <a href="#" class="text-primary text-decoration-none
+                       fw-semibold" (click)="isLoginView = true; $event.preventDefault()">
+                Sign in
+              </a>
+            </p>
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </div>
