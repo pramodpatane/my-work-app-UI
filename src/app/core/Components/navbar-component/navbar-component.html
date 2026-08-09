@@ -13,10 +13,10 @@
   <!-- Menus -->
   <ul class="menu-list">
 
-    <li *ngFor="let menu of menus">
+    <li *ngFor="let menu of appMenus">
 
       <!-- Menu without children -->
-      <a *ngIf="!menu.children" [routerLink]="menu.link" routerLinkActive="active" class="menu-item"
+      <a *ngIf="!menu.children || menu.children.length === 0" [routerLink]="menu.link" routerLinkActive="active" class="menu-item"
         (click)="closeMobileMenu()">
 
         <div class="menu-left">
@@ -30,7 +30,7 @@
       </a>
 
       <!-- Menu with children -->
-      <div *ngIf="menu.children">
+      <div *ngIf="menu.children && menu.children.length > 0">
 
         <div class="menu-item" (click)="toggleMenu(menu)">
 
@@ -80,10 +80,10 @@
 
 <div class="main-content" [class.expanded]="isCollapsed">
 
-  <div class="topbar d-flex align-items-center w-100 bg-secondary">
+  <div class="topbar d-flex align-items-center w-100" style="position: sticky; top: 0; z-index: 1000; background-color: #2b3a4e;">
 
     <div class="topbar-left">
-      <button class="menu-btn" (click)="toggleMobileMenu()">
+      <button class="menu-btn" *ngIf="isMobileMenuOpen" (click)="toggleMobileMenu()">
         <mat-icon style="color: #fff;">menu</mat-icon>
       </button>
       <button class="collapse-btn" (click)="toggleSidebar()">
@@ -109,7 +109,7 @@
 
         </a>
 
-        <ul class="dropdown-menu dropdown-menu-end shadow">
+        <ul class="dropdown-menu dropdown-menu-end shadow p-2" style="min-width: 200px;">
 
           <li *ngIf="userRole === 'Superadmin'">
             <a class="dropdown-item" routerLink="/core/users">

@@ -20,7 +20,6 @@ export const Core_Routes: Routes = [
           import('../core/Components/dashboard-component/dashboard-component')
             .then(m => m.DashboardComponent)
       },
-
       {
         path: 'users',
         loadComponent: () =>
@@ -30,7 +29,13 @@ export const Core_Routes: Routes = [
           data: {
             roles: ['SuperAdmin']
           }
-      }
+      },
+      {
+        path: 'no-access',
+        loadComponent: () =>
+          import('../core/Components/blank-page/blank-page')
+            .then(m => m.BlankPage)
+      },
     ]
   }
 ];

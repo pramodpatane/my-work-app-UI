@@ -1,83 +1,60 @@
 <div class="card" *ngIf="IsDefaultView">
-  <div style="background-color: #1e293b;" class="card-header d-flex justify-content-between align-items-center">
-    <span style="color: #ffffff;" class="fw-bold">Farmers Details</span>
+  <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #4c5d78;">
 
-    <!-- <mat-form-field appearance="outline">
-      <input matInput [matDatepicker]="picker" [(ngModel)]="fromDate">
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field> -->
-    <div></div>
+    <span class="fw-bold text-white">
+      Farmers Details
+    </span>
 
-    <button type="button" class="btn btn-sm btn-primary" (click)="OpenForm()">Add</button>
+    <div class="d-flex align-items-center gap-2">
+
+      <input type="text" class="form-control form-control-sm" style="width: 220px;" placeholder="Search farmers..."
+        (input)="onSearch($event)" />
+
+      <button type="button" class="btn btn-sm btn-primary" (click)="OpenForm()">
+        <i class="bi bi-plus-lg me-1"></i>
+        Add
+      </button>
+
+    </div>
   </div>
 
-  <div class="card-body">
-    <div class="row border border-solid">
-      <div class="table-container">
-        <table mat-table [dataSource]="clientsData" class="mat-elevation-z8">
+  <ag-grid-angular class="ag-theme-quartz" style="width: 100%; height: 550px;" [rowData]="clientsData"
+    [columnDefs]="displayedColumns" [rowHeight]="49"
+    [defaultColDef]="{ sortable: true, filter: true, resizable: true }">
+  </ag-grid-angular>
+  <div class="d-flex justify-content-between align-items-center mt-3 px-3">
 
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef>Actions</th>
-            <td mat-cell *matCellDef="let row">
-              <button mat-icon-button class="text-primary" (click)="Edit(row.recordId)">
-                <mat-icon>edit</mat-icon>
-              </button>
-              <button mat-icon-button class="text-danger" (click)="Delete(row.recordId)">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="clientCode">
-            <th mat-header-cell *matHeaderCellDef>Farmer Code</th>
-            <td mat-cell *matCellDef="let row">{{ row.clientCode }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef>Name</th>
-            <td mat-cell *matCellDef="let row">{{ row.name }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="clientType">
-            <th mat-header-cell *matHeaderCellDef>Farmer Type</th>
-            <td mat-cell *matCellDef="let row">{{ row.clientType }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="email">
-            <th mat-header-cell *matHeaderCellDef>Email</th>
-            <td mat-cell *matCellDef="let row">{{ row.email }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="contactPerson">
-            <th mat-header-cell *matHeaderCellDef>Contact Person</th>
-            <td mat-cell *matCellDef="let row">{{ row.contactPerson }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="mobile">
-            <th mat-header-cell *matHeaderCellDef>Mobile</th>
-            <td mat-cell *matCellDef="let row">{{ row.mobile }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="alternateMobile">
-            <th mat-header-cell *matHeaderCellDef>Alternate Mobile</th>
-            <td mat-cell *matCellDef="let row">{{ row.alternateMobile }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="createdDate">
-            <th mat-header-cell *matHeaderCellDef>Created Date</th>
-            <td mat-cell *matCellDef="let row">{{ row.createdDate }}</td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-      </div>
-
-      <mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 20, 50, 100]" (page)="onPageChange($event)"
-        showFirstLastButtons>
-      </mat-paginator>
+    <!-- Records information -->
+    <div class="text-muted small">
+      Showing {{ currentStart }} - {{ currentEnd }} of {{ totalCount }}
     </div>
+
+    <!-- Pagination -->
+    <nav>
+      <ul class="pagination pagination-sm mb-0">
+        <li class="page-item" [class.disabled]="filterdata.pageNumber === 1">
+
+          <button type="button" class="page-link" (click)="previousPage()" [disabled]="filterdata.pageNumber === 1">
+            Previous
+          </button>
+        </li>
+
+
+        <li class="page-item active">
+          <span class="page-link">
+            {{ filterdata.pageNumber }}
+          </span>
+        </li>
+
+        <li class="page-item" [class.disabled]="filterdata.pageNumber === totalPages()">
+
+          <button type="button" class="page-link" (click)="nextPage()"
+            [disabled]="filterdata.pageNumber === totalPages()">
+            Next
+          </button>
+        </li>
+      </ul>
+    </nav>
   </div>
 </div>
 
@@ -94,18 +71,18 @@
       <div class="row">
         <div class="col-sm-12 col-md-6 col-lg-6">
           <div class="mb-3">
-            <label>Name</label>
-            <input type="text" class="form-control" formControlName="name" />
-            <!-- <small class="text-danger" *ngIf="form.firstName.touched && form.firstName.invalid">
+            <label>First Name</label>
+            <input type="text" class="form-control" formControlName="firstname" />
+            <!-- <small class="text-danger" *ngIf="clientForm.firstname.touched && clientForm.firstname.invalid">
               First Name is required
             </small> -->
           </div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-6">
           <div class="mb-3">
-            <label>Farmer Type</label>
-            <input type="text" class="form-control" formControlName="clientType" />
-            <!-- <small class="text-danger" *ngIf="form.lastName.touched && form.lastName.invalid">
+            <label>Last Name</label>
+            <input type="text" class="form-control" formControlName="lastname" />
+            <!-- <small class="text-danger" *ngIf="clientForm.lastname.touched && clientForm.lastname.invalid">
               Last Name is required
             </small> -->
           </div>
@@ -125,7 +102,7 @@
         <div class="col-sm-12 col-md-6 col-lg-6">
           <div class="mb-3">
             <label>Farmer Code</label>
-            <input type="text" class="form-control" formControlName="clientCode" />
+            <input type="text" class="form-control" (input)="convertToUpperCase($event)" formControlName="clientCode" />
             <!-- <small class="text-danger" *ngIf="form.clientCode.touched && form.clientCode.invalid">
               Farmer Code must be a number
             </small> -->
@@ -145,10 +122,10 @@
         </div>
         <div class="col-sm-12 col-md-6 col-lg-6">
           <div class="mb-3">
-            <label>Contact Person</label>
-            <input type="text" class="form-control" formControlName="contactPerson" />
-            <!-- <small class="text-danger" *ngIf="form.contactPerson.touched && form.contactPerson.invalid">
-              Contact Person is required
+            <label>Farmer Type</label>
+            <input type="text" class="form-control" formControlName="clientType" />
+            <!-- <small class="text-danger" *ngIf="clientForm.clientType.touched && clientForm.clientType.invalid">
+              Farmer Type is required
             </small> -->
           </div>
         </div>

@@ -1,7 +1,9 @@
 export class ClientsModel {
-    recordId: number = 0;
+    id: number = 0;
+    recordId: string = "";
     clientCode: string = '';
-    name: string = '';
+    firstname: string = '';
+    lastname: string = '';
     clientType: string = '';
     email: string = '';
     contactPerson: string = '';

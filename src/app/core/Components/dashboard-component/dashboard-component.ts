@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { FilterData } from '../../Models/FilterData';
+import { ClientsService } from '../../../feature/Services/clients.service';
+import { SwalService } from '../../../global/swal.service';
 
 @Component({
   selector: 'app-dashboard-component',
@@ -8,9 +11,21 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './dashboard-component.html',
   styleUrl: './dashboard-component.css',
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
   string1: string = "";
   string2: string = "";
+  filterdata: FilterData = new FilterData();
+  clientsData: any[] = [];
+  totalClients: number = 0;
+  thisMonthClients: number = 0;
+
+  constructor(private clientsService: ClientsService, private cdr: ChangeDetectorRef,
+    private swalService: SwalService,
+  ) {}
+
+  ngOnInit(): void {
+    this.GetData();
+  }
 
   // checkCharacterCount(): boolean {
 
@@ -37,4 +52,31 @@ export class DashboardComponent {
 
   //   return true;
   // }
+
+  public async GetData() {
+    try{
+      const today = new Date();
+      const dateBefore120Days = new Date();
+      dateBefore120Days.setDate(today.getDate() - 120);
+      this.filterdata.fromDate = dateBefore120Days;
+      this.filterdata.toDate = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
+      
+       (await this.clientsService.GetAllData(this.filterdata)).subscribe({
+          next: (res) => {            
+            let response = JSON.parse(JSON.stringify(res));
+            this.clientsData = response.data;
+            this.totalClients = response.totalCount;
+            this.thisMonthClients = response.thisMonthTotal;            ;
+            this.cdr.detectChanges();
+          },
+          error: () => {
+            this.swalService.ShowAlert("error", "");
+          }
+        });
+      //} ✅
+    }
+    catch(err) {
+      throw err;
+    }
+  }
 }
