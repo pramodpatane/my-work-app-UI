@@ -6,6 +6,7 @@ import { MenuService } from '../../Services/menu.service';
 import { MatIconModule } from '@angular/material/icon';
 import { A11yModule } from "@angular/cdk/a11y";
 import { SwalService } from '../../../global/swal.service';
+import { UserStateService } from '../../Services/user.state.service';
 
 @Component({
   selector: 'app-navbar-component',
@@ -23,17 +24,17 @@ export class NavbarComponent {
   openMenu: string = '';
   logoUrl: string = "../../../assets/DMS Logo.png";
 
-  constructor(private router: Router, private swalservice: SwalService, 
+  constructor(private router: Router, private swalservice: SwalService, private userStateService: UserStateService,
     private menuService: MenuService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     const userData = localStorage.getItem('UserData');
+    //const userData = this.userStateService.user$.subscribe(user => { });    
     if (userData) {
       this.userName = JSON.parse(userData).userName || 'User';
       this.userRole = JSON.parse(userData).roleName || 'User';
       this.userGuid = JSON.parse(userData).recordId || '';
     }
-
     this.GetUserAppMenus();
   }
 
@@ -86,7 +87,7 @@ export class NavbarComponent {
 
   @HostListener('window:resize')
   onResize() {
-    if (window.innerWidth > 768) {
+    if (window.innerWidth > 390) {
       this.isMobileMenuOpen = false;
     }
   }
