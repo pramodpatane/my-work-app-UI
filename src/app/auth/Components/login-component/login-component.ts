@@ -13,6 +13,7 @@ import { UserConfiguration, UserModel } from '../../Models/user-model';
 import { UserService } from '../../../core/Services/user-service';
 import { SignUp } from '../sign-up/sign-up';
 import { MenuService } from '../../../core/Services/menu.service';
+import { UserStateService } from '../../../core/Services/user.state.service';
 
 @Component({
   selector: 'app-login-component',
@@ -36,7 +37,7 @@ export class LoginComponent {
 
   constructor(private authService: AuthService, private router: Router, private userRolesService: UserRolesService,
     private emailService: EmailService, private swalService: SwalService, private userService: UserService,
-    private menuService: MenuService,
+    private menuService: MenuService, private userState: UserStateService
   ) {}
 
   ngOnInit() {
@@ -85,6 +86,7 @@ export class LoginComponent {
           if(JSON.parse(response).isSuccess == true) {
             localStorage.setItem("UserData", response);
             localStorage.setItem("IsUserLoggedIn", "True");
+            this.userState.setUser(JSON.parse(response));
             this.authService.startTokenTimer();
 
             this.userGuid = JSON.parse(localStorage.getItem("UserData") || '{}').recordId;
