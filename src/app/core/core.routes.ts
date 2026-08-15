@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { NavbarComponent } from './Components/navbar-component/navbar-component';
-import { authGuard } from '../auth/Services/auth.guard';
-import { RoleGuard } from '../auth/Services/role.guard';
+import { authGuard } from '../auth/Guards/auth.guard';
+import { RoleGuard } from '../auth/Guards/role.guard';
 
 export const Core_Routes: Routes = [
     {

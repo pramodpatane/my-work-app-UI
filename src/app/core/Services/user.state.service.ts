@@ -7,16 +7,18 @@ import { UserModel } from "../../auth/Models/user-model";
 })
 export class UserStateService {
 
-    user = signal<UserModel | null>(null);
-  private userSubject = new BehaviorSubject<UserModel | null>(null);
+  private _user = signal<UserModel | null>(null);
+  user = this._user.asReadonly();
 
-  user$ = this.userSubject.asObservable();
-
-  setUser(user: UserModel) {
-    this.userSubject.next(user);
+  setUser(user: UserModel): void {
+    this._user.set(user);
   }
 
-  clearUser() {
-    this.userSubject.next(null);
+  clearUser(): void {
+    this._user.set(null);
+  }
+
+  isLoggedIn(): boolean {
+    return this._user() !== null;
   }
 }

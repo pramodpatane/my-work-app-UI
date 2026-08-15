@@ -1,12 +1,13 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { UserStateService } from "./user.state.service";
 
 @Injectable({
     providedIn: "root"
 })
 
 export class ApiService {
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private userSessionService: UserStateService) {
 
     }
 
@@ -40,10 +41,10 @@ export class ApiService {
     // }
 
     addHeadersToApiRequest(tokenRequired: boolean) {
-        const userData = localStorage.getItem('UserData');
+        const user = this.userSessionService.user();
         let token = "";
-        if (userData) {
-            token = JSON.parse(userData).token || 'token';
+        if (user) {
+            token = user.token || 'token';
         }
         if (tokenRequired === true && token != "") {
             return new HttpHeaders({

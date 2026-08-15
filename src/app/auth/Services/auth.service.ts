@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { UserStateService } from '../../core/Services/user.state.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,12 +13,14 @@ export class AuthService {
   private userRoles: string[] = [];
   private baseUrl = 'https://localhost:44391/api/Auth';
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private http: HttpClient, private router: Router, private userState: UserStateService) {
     this.loadRoles();
   }
 
   loadRoles() {
-    const token = localStorage.getItem('token'); 
+    const user = this.userState.user();
+    //console.log('User from UserStateService:', user);
+    const token = user?.token || '';
     if (token) {
       const payload = JSON.parse(atob(token.split('.')[1]));
       this.userRoles = payload.roles || [];
@@ -43,7 +46,8 @@ export class AuthService {
   }
 
   startTokenTimer(): void {
-  const token = localStorage.getItem('token');
+    const user = this.userState.user();
+    const token = user?.token || '';
 
   if (!token) {
     return;

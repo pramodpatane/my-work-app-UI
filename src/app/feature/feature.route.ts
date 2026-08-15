@@ -1,63 +1,71 @@
 import { Routes } from '@angular/router';
-import { authGuard } from '../auth/Services/auth.guard';
+
+import { authGuard } from '../auth/Guards/auth.guard';
+import { RouteGuard } from '../auth/Guards/route.guard';
 import { NavbarComponent } from '../core/Components/navbar-component/navbar-component';
-import { MenuGuard } from '../auth/Guards/menu.guard';
 
 export const Feature_Routes: Routes = [
-    {
+
+  {
     path: '',
     component: NavbarComponent,
+
     canActivate: [authGuard],
+
+    canActivateChild: [RouteGuard],
+
     children: [
+
       {
         path: 'employees',
         loadComponent: () =>
           import('./Components/employees/employees')
-            .then(m => m.Employees),
-        //canActivate: [MenuGuard]
+            .then(m => m.Employees)
       },
+
       {
         path: 'farmers',
         loadComponent: () =>
-          import('../feature/Components/clients/clients')
-            .then(m => m.Clients),
-        //canActivate: [MenuGuard]
+          import('./Components/clients/clients')
+            .then(m => m.Clients)
       },
+
       {
         path: 'purchase',
         loadComponent: () =>
-          import('../feature/Components/purchase/purchase')
-            .then(m => m.Purchase),
-        //canActivate: [MenuGuard]
+          import('./Components/purchase/purchase')
+            .then(m => m.Purchase)
       },
+
       {
         path: 'sales',
         loadComponent: () =>
-          import('../feature/Components/sales/sales')
-            .then(m => m.Sales),
-        //canActivate: [MenuGuard]
+          import('./Components/sales/sales')
+            .then(m => m.Sales)
       },
+
       {
         path: 'collection',
         loadComponent: () =>
-          import('../feature/Components/collection/collection')
-            .then(m => m.Collection),
-        //canActivate: [MenuGuard]
+          import('./Components/collection/collection')
+            .then(m => m.Collection)
       },
+
       {
         path: 'customers',
         loadComponent: () =>
-          import('../feature/Components/customers/customers')
-            .then(m => m.Customers),
-        //canActivate: [MenuGuard]
+          import('./Components/customers/customers')
+            .then(m => m.Customers)
       },
+
       {
         path: 'suppliers',
         loadComponent: () =>
-          import('../feature/Components/vendors/vendors')
-            .then(m => m.Vendors),
-        //canActivate: [MenuGuard]
-      },
+          import('./Components/vendors/vendors')
+            .then(m => m.Vendors)
+      }
+
     ]
   }
+
 ];

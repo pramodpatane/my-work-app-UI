@@ -13,6 +13,7 @@ import { UserRolesService } from '../../Services/user.roles.service';
 import { SwalService } from '../../../global/swal.service';
 import { EmailModel, VerifyOtpModel } from '../../../auth/Models/email.model';
 import { UserService } from '../../Services/user-service';
+import { UserStateService } from '../../Services/user.state.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -34,7 +35,7 @@ export class SignInComponent {
   @Input() userConfiguration!: UserConfiguration;
 
   constructor(private authService: AuthService, private router: Router, private userRolesService: UserRolesService,
-    private emailService: EmailService, private swalService: SwalService, private userService: UserService
+    private emailService: EmailService, private swalService: SwalService, private userService: UserService, private userState: UserStateService
   ) {}
 
   ngOnInit() {
@@ -81,7 +82,7 @@ export class SignInComponent {
         next: (res) => {
           response = JSON.stringify(res);
           if(JSON.parse(response).isSuccess == true) {
-            localStorage.setItem("UserData", response);
+            this.userState.setUser(JSON.parse(response));
             localStorage.setItem("IsUserLoggedIn", "True");
 
             this.router.navigate(['/core']);   // navigate to navbar

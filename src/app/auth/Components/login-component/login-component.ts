@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { LoginModel } from '../../Models/login-model';
 import { AuthService } from '../../Services/auth.service';
 import { Router } from '@angular/router';
@@ -84,15 +84,14 @@ export class LoginComponent {
         next: async (res) => {
           response = JSON.stringify(res);
           if(JSON.parse(response).isSuccess == true) {
-            localStorage.setItem("UserData", response);
             localStorage.setItem("IsUserLoggedIn", "True");
             this.userState.setUser(JSON.parse(response));
             this.authService.startTokenTimer();
 
-            this.userGuid = JSON.parse(localStorage.getItem("UserData") || '{}').recordId;
-            if(this.userGuid) {
-              //this.router.navigate(['dashboard']);   // navigate to navbar
-              (await this.menuService.GetUserMenus(this.userGuid)).subscribe({
+            const user = this.userState.user();
+            const userGuid = user?.recordId || '';
+            if(userGuid) {
+              (await this.menuService.GetUserMenus(userGuid)).subscribe({
                 next: (res) => {            
                   let response = JSON.parse(JSON.stringify(res));                  
                   const firstMenu = response.find((m: { link: any; }) => m.link);
