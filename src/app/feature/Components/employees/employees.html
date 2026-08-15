@@ -1,9 +1,9 @@
 <div class="card" *ngIf="IsDefaultView">
 
-  <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #0d6efd;">
+  <div class="card-header d-flex justify-content-between align-items-center bg-secondary">
 
     <span class="fw-bold text-white">
-      Employees Details
+      {{ gridConfiguration.gridTitle }}
     </span>
 
     <div class="d-flex align-items-center gap-2">
@@ -19,43 +19,8 @@
     </div>
   </div>
 
-  <ag-grid-angular class="ag-theme-quartz" style="width: 100%; height: 515px;"
-    [rowData]="employeesData"[columnDefs]="displayedColumns" [rowHeight]="49"
-    [defaultColDef]="{ sortable: true, filter: true, resizable: true }">
-  </ag-grid-angular>
-  <div class="d-flex justify-content-between align-items-center mt-3 px-3">
-
-    <!-- Records information -->
-    <div class="text-muted small">
-      Showing {{ currentStart }} - {{ currentEnd }} of {{ totalCount }}
-    </div>
-
-    <!-- Pagination -->
-    <nav>
-      <ul class="pagination pagination-sm mb-0">
-        <li class="page-item" [class.disabled]="filterdata.pageNumber === 1">
-
-          <button type="button" class="page-link" (click)="previousPage()" [disabled]="filterdata.pageNumber === 1">
-            Previous
-          </button>
-        </li>
-
-        <li class="page-item active">
-          <span class="page-link">
-            {{ filterdata.pageNumber }}
-          </span>
-        </li>
-
-        <li class="page-item" [class.disabled]="filterdata.pageNumber === totalPages()">
-
-          <button type="button" class="page-link" (click)="nextPage()"
-            [disabled]="filterdata.pageNumber === totalPages()">
-            Next
-          </button>
-        </li>
-      </ul>
-    </nav>
-  </div>
+  <app-common-ag-grid [gridConfiguration]="gridConfiguration" [recordCount]="totalCount" (gridEvent)="onGridEvent($event)">
+  </app-common-ag-grid>
 </div>
 
 <div class="card" *ngIf="!IsDefaultView">

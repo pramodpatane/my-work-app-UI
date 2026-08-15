@@ -1,1 +1,25 @@
-<p>collection works!</p>
+<div class="card" *ngIf="IsDefaultView">
+    <div class="card-header d-flex justify-content-between align-items-center bg-secondary">
+
+    <span class="fw-bold text-white">
+      {{ gridConfiguration.gridTitle }}
+    </span>
+
+    <div class="d-flex align-items-center gap-2">
+
+      <input type="text" class="form-control form-control-sm" style="width: 220px;" placeholder="Search collection..."
+        (input)="onSearch($event)" />
+
+      <button type="button" class="btn btn-sm btn-primary" (click)="OpenForm()">
+        <i class="bi bi-plus-lg me-1"></i>
+        Add
+      </button>
+
+    </div>
+  </div>
+
+  <app-common-ag-grid [gridConfiguration]="gridConfiguration" [recordCount]="totalCount" (gridEvent)="onGridEvent($event)">
+  </app-common-ag-grid>
+</div>
+
+

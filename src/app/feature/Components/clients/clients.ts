@@ -11,13 +11,13 @@ import { FilterData } from '../../../core/Models/FilterData';
 import { ClientsModel } from '../../Models/clients.model';
 import { ClientsService } from '../../Services/clients.service';
 import { SwalService } from '../../../global/swal.service';
-import { AgGridAngular} from 'ag-grid-angular';
-import { ColDef } from 'ag-grid-community';
+import { CommonAgGrid } from '../../../core/Components/common-ag-grid/common-ag-grid';
+import { GridConfigurationModel } from '../../../core/Models/grid-configuration.model';
 
 @Component({
   selector: 'app-clients',
   imports: [ReactiveFormsModule, CommonModule, MatTableModule, MatPaginatorModule, MatIconModule, 
-    MatFormFieldModule, MatDatepickerModule, FormsModule, AgGridAngular],
+    MatFormFieldModule, MatDatepickerModule, FormsModule, CommonAgGrid],
   templateUrl: './clients.html',
   styleUrl: './clients.css',
 })
@@ -27,25 +27,7 @@ export class Clients implements OnInit {
   IsDefaultView: boolean = true;
   HeaderText: string = "Add Client";
   ButtonText: string = "Insert";
-  displayedColumns: ColDef[] = [
-    { headerName: 'Action', width: 110, pinned: 'left', sortable: false, filter: false, resizable: false, 
-      cellRenderer: (params: any) => { return ` <div class="d-flex align-items-center justify-content-center gap-2 h-100"> 
-        <button type="button" class="btn btn-sm btn-outline-primary edit-btn" title="Edit" data-action="edit"> <i class="bi bi-pencil"></i> </button> 
-        <button type="button" class="btn btn-sm btn-outline-danger delete-btn" title="Delete" data-action="delete"> <i class="bi bi-trash"></i> </button> </div> `; }, 
-      onCellClicked: (params: any) => { const target = params.event?.target as HTMLElement; 
-        const button = target.closest('button'); if (!button) { return; } 
-        const action = button.getAttribute('data-action'); 
-        if (action === 'edit') { this.Edit(params.data.recordId); } 
-        if (action === 'delete') { this.Delete(params.data.recordId); } } }, 
-    { field: 'clientCode', width: 100, headerName: 'Client Code', flex: 1, sortable: true, filter: true, resizable: true },
-    { field: 'firstName', width: 100, headerName: 'First Name', flex: 1, sortable: true, filter: true, resizable: true },
-    { field: 'lastName', width: 100, headerName: 'Last Name', flex: 1, sortable: true, filter: true, resizable: true },
-    { field: 'clientType', width: 300, headerName: 'Client Type', flex: 1, sortable: true, filter: true, resizable: true },
-    { field: 'email', width: 300, headerName: 'Email', flex: 1, sortable: true, filter: true, resizable: true },
-    { field: 'mobile', width: 100, headerName: 'Mobile', flex: 1, sortable: true, filter: true, resizable: true },
-    { field: 'alternateMobile', width: 100, headerName: 'Alternate Mobile', flex: 1, sortable: true, filter: true, resizable: true },
-    { field: 'createdDate', width: 150, headerName: 'Created Date', flex: 1, sortable: true, filter: true, resizable: true }
-  ];  
+  gridConfiguration: GridConfigurationModel = new GridConfigurationModel();
   clientsData = [];
   totalCount: number = 0;
   fromDate!: Date;
@@ -54,7 +36,28 @@ export class Clients implements OnInit {
 
   constructor(private formBuilder: FormBuilder, private clientsService: ClientsService, private cdr: ChangeDetectorRef,
     private swalService: SwalService, 
-  ) {}
+  ) {
+    this.gridConfiguration.gridColumns = [
+      { headerName: 'Action', width: 110, pinned: 'left', sortable: false, filter: false, resizable: false, 
+        cellRenderer: (params: any) => { return ` <div class="d-flex align-items-center justify-content-center gap-2 h-100"> 
+          <button type="button" class="btn btn-sm btn-outline-primary edit-btn" title="Edit" data-action="edit"> <i class="bi bi-pencil"></i> </button> 
+          <button type="button" class="btn btn-sm btn-outline-danger delete-btn" title="Delete" data-action="delete"> <i class="bi bi-trash"></i> </button> </div> `; }, 
+        onCellClicked: (params: any) => { const target = params.event?.target as HTMLElement; 
+          const button = target.closest('button'); if (!button) { return; } 
+          const action = button.getAttribute('data-action'); 
+          if (action === 'edit') { this.Edit(params.data.recordId); } 
+          if (action === 'delete') { this.Delete(params.data.recordId); } } }, 
+      { field: 'clientCode', width: 100, headerName: 'Client Code', flex: 1, sortable: true, filter: true, resizable: true },
+      { field: 'firstName', width: 100, headerName: 'First Name', flex: 1, sortable: true, filter: true, resizable: true },
+      { field: 'lastName', width: 100, headerName: 'Last Name', flex: 1, sortable: true, filter: true, resizable: true },
+      { field: 'clientType', width: 300, headerName: 'Client Type', flex: 1, sortable: true, filter: true, resizable: true },
+      { field: 'email', width: 300, headerName: 'Email', flex: 1, sortable: true, filter: true, resizable: true },
+      { field: 'mobile', width: 100, headerName: 'Mobile', flex: 1, sortable: true, filter: true, resizable: true },
+      { field: 'alternateMobile', width: 100, headerName: 'Alternate Mobile', flex: 1, sortable: true, filter: true, resizable: true },
+      { field: 'createdDate', width: 150, headerName: 'Created Date', flex: 1, sortable: true, filter: true, resizable: true }
+    ];
+    this.gridConfiguration.gridTitle = 'Farmer Master';   
+  }
 
   ngOnInit() {
     this.GetData();
@@ -124,7 +127,7 @@ export class Clients implements OnInit {
   onSearch(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.filterdata.filterString = value;
-    const gridColumnFields = this.displayedColumns
+    const gridColumnFields = this.gridConfiguration.gridColumns
     .filter(column => column.field)
     .map(column => column.field);
 
@@ -136,37 +139,9 @@ export class Clients implements OnInit {
     this.GetData();
   }
 
-  totalPages(): number {
-    return Math.ceil(
-      this.totalCount / this.filterdata.pagesize
-    );
-  }
-
-  nextPage(): void {
-    if (this.filterdata.pageNumber < this.totalPages()) {
-      this.filterdata.pageNumber++;
-      this.filterdata.skip = (this.filterdata.pageNumber - 1) * this.filterdata.pagesize;
-      this.GetData();
-    }
-  }
-
-  previousPage(): void {
-    if (this.filterdata.pageNumber > 1) {
-      this.filterdata.pageNumber--;
-      this.filterdata.skip = (this.filterdata.pageNumber - 1) * this.filterdata.pagesize;
-      this.GetData();
-    }
-  }
-
-  get currentStart(): number {
-    return ((this.filterdata.pageNumber - 1) * this.filterdata.pagesize) + 1;
-  }
-
-  get currentEnd(): number {
-    return Math.min(
-      this.filterdata.pageNumber * this.filterdata.pagesize,
-      this.totalCount
-    );
+  onGridEvent(gridFilter: any): void {
+    this.gridConfiguration.gridFilter = gridFilter;
+    this.GetData();
   }
 
   toggleIsDefaultView() {
@@ -196,7 +171,7 @@ export class Clients implements OnInit {
           next: (res) => {            
             let response = JSON.parse(JSON.stringify(res));
             //console.log(response)
-            this.clientsData = response.data;
+             this.gridConfiguration.gridData = response.data;
             this.totalCount = response.totalCount;
             this.cdr.detectChanges();
           },

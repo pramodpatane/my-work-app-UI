@@ -1,0 +1,77 @@
+<ag-grid-angular class="ag-theme-quartz" 
+    [style.width]="gridConfiguration.gridWidth" 
+    [style.height]="gridConfiguration.gridHeight" 
+    [rowData]="gridConfiguration.gridData"
+    [columnDefs]="gridConfiguration.gridColumns" 
+    [rowHeight]="gridConfiguration.gridRowHeight"
+    [defaultColDef]="{ sortable: true, filter: true, resizable: true }">
+</ag-grid-angular>
+
+<div class="d-flex justify-content-between align-items-center mx-2 my-2">
+
+  <!-- Left: Record information -->
+  <div class="text-muted text-bold">
+    Showing {{ startRecord }} - {{ endRecord }} of {{ recordCount() }}
+  </div>
+
+  <!-- Right: Pagination -->
+  <div class="d-flex align-items-center gap-2">
+
+    <!-- Page Size -->
+    <select
+      class="form-select form-select-sm"
+      style="width: 80px;"
+      [value]="gridConfiguration.gridFilter.pagesize"
+      (change)="onPageSizeChange($event)">
+
+      <option *ngFor="let size of gridConfiguration.gridPageSizes" [value]="size">
+        {{ size }}
+      </option>
+
+    </select>
+
+    <!-- First -->
+    <button
+      type="button"
+      class="btn btn-sm btn-outline-secondary"
+      [disabled]="gridConfiguration.gridFilter.pageNumber === 1"
+      (click)="goToFirstPage()">
+      <i class="bi bi-chevron-double-left"></i>
+    </button>
+
+    <!-- Previous -->
+    <button
+      type="button"
+      class="btn btn-sm btn-outline-secondary"
+      [disabled]="gridConfiguration.gridFilter.pageNumber === 1"
+      (click)="goToPreviousPage()">
+      <i class="bi bi-chevron-left"></i>
+    </button>
+
+    <!-- Current Page -->
+    <span class="px-2">
+      Page {{ gridConfiguration.gridFilter.pageNumber }} of {{ totalPages() }}
+    </span>
+
+    <!-- Next -->
+    <button
+      type="button"
+      class="btn btn-sm btn-outline-secondary"
+      [disabled]="gridConfiguration.gridFilter.pageNumber === totalPages()"
+      (click)="goToNextPage()">
+      <i class="bi bi-chevron-right"></i>
+      
+    </button>
+
+    <!-- Last -->
+    <button
+      type="button"
+      class="btn btn-sm btn-outline-secondary"
+      [disabled]="gridConfiguration.gridFilter.pageNumber === totalPages()"
+      (click)="goToLastPage()">
+      <i class="bi bi-chevron-double-right"></i>
+    </button>
+
+  </div>
+
+</div>
