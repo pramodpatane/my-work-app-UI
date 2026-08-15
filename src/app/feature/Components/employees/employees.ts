@@ -11,13 +11,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { DepartmentService } from '../../../core/Services/departments.service';
 import { DropdownModel } from '../../../auth/Models/dropdown.model';
-import { AgGridAngular} from 'ag-grid-angular';
-import { ColDef } from 'ag-grid-community';
+import { GridConfigurationModel } from '../../../core/Models/grid-configuration.model';
+import { CommonAgGrid } from '../../../core/Components/common-ag-grid/common-ag-grid';
 
 @Component({
   selector: 'app-employees',
-  imports: [ReactiveFormsModule, CommonModule,
-    MatFormFieldModule, MatDatepickerModule, FormsModule, AgGridAngular],
+  imports: [ReactiveFormsModule, CommonModule, CommonAgGrid,
+    MatFormFieldModule, MatDatepickerModule, FormsModule],
   templateUrl: './employees.html',
   styleUrl: './employees.css',
 })
@@ -27,36 +27,38 @@ export class Employees implements OnInit {
   HeaderText: string = "Add Employee";
   ButtonText: string = "Insert";
   gridColumnFields: any[] = [];
-  displayedColumns: ColDef[] = [
-    { headerName: 'Action', width: 110, pinned: 'left', sortable: false, filter: false, resizable: false, 
-      cellRenderer: (params: any) => { return ` <div class="d-flex align-items-center justify-content-center gap-2 h-100"> 
-        <button type="button" class="btn btn-sm btn-outline-primary edit-btn" title="Edit" data-action="edit"> <i class="bi bi-pencil"></i> </button> 
-        <button type="button" class="btn btn-sm btn-outline-danger delete-btn" title="Delete" data-action="delete"> <i class="bi bi-trash"></i> </button> </div> `; }, 
-      onCellClicked: (params: any) => { const target = params.event?.target as HTMLElement; 
-        const button = target.closest('button'); if (!button) { return; } 
-        const action = button.getAttribute('data-action'); 
-        if (action === 'edit') { this.Edit(params.data.recordId); } 
-        if (action === 'delete') { this.Delete(params.data.recordId); } } }, 
-    { field: 'firstName', width: 100, headerName: 'First Name', flex: 1, sortable: true, filter: true, resizable: true },
-    { field: 'lastName', width: 100, headerName: 'Last Name', flex: 1, sortable: true, filter: true, resizable: true },
-    { field: 'email', width: 300, headerName: 'Email', flex: 1, sortable: true, filter: true, resizable: true },
-    { field: 'salary', width: 100, headerName: 'Salary', flex: 1, sortable: true, filter: true, resizable: true },
-    { field: 'department', width: 100, headerName: 'Department', flex: 1, sortable: true, filter: true, resizable: true },
-    { field: 'createdDate', width: 150, headerName: 'Created Date', flex: 1, sortable: true, filter: true, resizable: true }
-  ];
+  
   employeesData = [];
   totalCount: number = 0;
   fromDate!: Date;
   DepartmentsList: DropdownModel[] = [];
-  filterdata: FilterData = new FilterData();
-
+  //filterdata: FilterData = new FilterData();
+  gridConfiguration: GridConfigurationModel = new GridConfigurationModel();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   firstDay: any;
   
   constructor(private swalservice: SwalService, private employeeService: EmployeeService, private cdr: ChangeDetectorRef,
     private formBuilder: FormBuilder, private departmentService: DepartmentService
   ) {
-    
+    this.gridConfiguration.gridColumns = [
+      { headerName: 'Action', width: 110, pinned: 'left', sortable: false, filter: false, resizable: false, 
+        cellRenderer: (params: any) => { return ` <div class="d-flex align-items-center justify-content-center gap-2 h-100"> 
+          <button type="button" class="btn btn-sm btn-outline-primary edit-btn" title="Edit" data-action="edit"> <i class="bi bi-pencil"></i> </button> 
+          <button type="button" class="btn btn-sm btn-outline-danger delete-btn" title="Delete" data-action="delete"> <i class="bi bi-trash"></i> </button> </div> `; }, 
+        onCellClicked: (params: any) => { const target = params.event?.target as HTMLElement; 
+          const button = target.closest('button'); if (!button) { return; } 
+          const action = button.getAttribute('data-action'); 
+          if (action === 'edit') { this.Edit(params.data.recordId); } 
+          if (action === 'delete') { this.Delete(params.data.recordId); } } }, 
+      { field: 'firstName', width: 100, headerName: 'First Name', flex: 1, sortable: true, filter: true, resizable: true },
+      { field: 'lastName', width: 100, headerName: 'Last Name', flex: 1, sortable: true, filter: true, resizable: true },
+      { field: 'email', width: 300, headerName: 'Email', flex: 1, sortable: true, filter: true, resizable: true },
+      { field: 'salary', width: 100, headerName: 'Salary', flex: 1, sortable: true, filter: true, resizable: true },
+      { field: 'department', width: 100, headerName: 'Department', flex: 1, sortable: true, filter: true, resizable: true },
+      { field: 'createdDate', width: 150, headerName: 'Created Date', flex: 1, sortable: true, filter: true, resizable: true }
+    ];
+    this.gridConfiguration.gridTitle = 'Employee Master';
+    //this.gridConfiguration.gridFilter.pagesize = 20;
   }
 
   ngOnInit() {
@@ -107,8 +109,8 @@ export class Employees implements OnInit {
   
   onSearch(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
-    this.filterdata.filterString = value;
-    const gridColumnFields = this.displayedColumns
+    this.gridConfiguration.gridFilter.filterString = value;
+    const gridColumnFields = this.gridConfiguration.gridColumns
     .filter(column => column.field)
     .map(column => column.field);
 
@@ -116,41 +118,47 @@ export class Employees implements OnInit {
     .map(field => `${field} like '${value}%'`)
     .join(' OR ');
 
-    this.filterdata.filterString = filterString;
+    this.gridConfiguration.gridFilter.filterString = filterString;
     this.GetData();
   }
 
   totalPages(): number {
     return Math.ceil(
-      this.totalCount / this.filterdata.pagesize
+      this.totalCount / this.gridConfiguration.gridFilter.pagesize
     );
   }
 
   nextPage(): void {
-    if (this.filterdata.pageNumber < this.totalPages()) {
-      this.filterdata.pageNumber++;
-      this.filterdata.skip = (this.filterdata.pageNumber - 1) * this.filterdata.pagesize;
+    if (this.gridConfiguration.gridFilter.pageNumber < this.totalPages()) {
+      this.gridConfiguration.gridFilter.pageNumber++;
+      this.gridConfiguration.gridFilter.skip = (this.gridConfiguration.gridFilter.pageNumber - 1) * this.gridConfiguration.gridFilter.pagesize;
       this.GetData();
     }
   }
 
   previousPage(): void {
-    if (this.filterdata.pageNumber > 1) {
-      this.filterdata.pageNumber--;
-      this.filterdata.skip = (this.filterdata.pageNumber - 1) * this.filterdata.pagesize;
+    if (this.gridConfiguration.gridFilter.pageNumber > 1) {
+      this.gridConfiguration.gridFilter.pageNumber--;
+      this.gridConfiguration.gridFilter.skip = (this.gridConfiguration.gridFilter.pageNumber - 1) * this.gridConfiguration.gridFilter.pagesize;
       this.GetData();
     }
   }
 
   get currentStart(): number {
-    return ((this.filterdata.pageNumber - 1) * this.filterdata.pagesize) + 1;
+    return ((this.gridConfiguration.gridFilter.pageNumber - 1) * this.gridConfiguration.gridFilter.pagesize) + 1;
   }
 
   get currentEnd(): number {
     return Math.min(
-      this.filterdata.pageNumber * this.filterdata.pagesize,
+      this.gridConfiguration.gridFilter.pageNumber * this.gridConfiguration.gridFilter.pagesize,
       this.totalCount
     );
+  }
+
+  onGridEvent(gridFilter: any): void {
+    //console.log('Event received from common grid:', gridFilter);
+    this.gridConfiguration.gridFilter = gridFilter;
+    this.GetData();
   }
 
   get form() {
@@ -162,14 +170,15 @@ export class Employees implements OnInit {
       const today = new Date();
       const dateBefore120Days = new Date();
       dateBefore120Days.setDate(today.getDate() - 120);
-      this.filterdata.fromDate = dateBefore120Days;
-      this.filterdata.toDate = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
+      this.gridConfiguration.gridFilter.fromDate = dateBefore120Days;
+      this.gridConfiguration.gridFilter.toDate = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
       
-       (await this.employeeService.GetAllData(this.filterdata)).subscribe({
+       (await this.employeeService.GetAllData(this.gridConfiguration.gridFilter)).subscribe({
           next: (res) => {            
             let response = JSON.parse(JSON.stringify(res));
             //console.log(response)
             this.employeesData = response.data;
+            this.gridConfiguration.gridData = response.data;
             this.totalCount = response.totalCount;
             this.cdr.detectChanges();
           },
