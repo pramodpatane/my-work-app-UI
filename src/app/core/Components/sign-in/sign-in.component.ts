@@ -5,22 +5,22 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { EmailService } from '../../Services/email-service';
 import { UserConfiguration, UserModel } from '../../Models/user-model';
-import { UserService } from '../../../core/Services/user-service';
 import { SignUp } from '../sign-up/sign-up';
-import { LoginModel } from '../../../app/auth/Models/login-model';
-import { DropdownModel } from '../../../app/auth/Models/dropdown.model';
-import { AuthService } from '../../../app/auth/Services/auth.service';
-import { UserRolesService } from '../../../app/core/Services/user.roles.service';
-import { SwalService } from '../../../app/global/swal.service';
-import { EmailModel, VerifyOtpModel } from '../../../app/auth/Models/email.model';
+import { LoginModel } from '../../../auth/Models/login-model';
+import { DropdownModel } from '../../../auth/Models/dropdown.model';
+import { AuthService } from '../../../auth/Services/auth.service';
+import { UserRolesService } from '../../Services/user.roles.service';
+import { SwalService } from '../../../global/swal.service';
+import { EmailModel, VerifyOtpModel } from '../../../auth/Models/email.model';
+import { UserService } from '../../Services/user-service';
 
 @Component({
-  selector: 'app-login-component',
+  selector: 'app-sign-in',
   imports: [FormsModule, CommonModule, SignUp],
-  templateUrl: './login-component.html',
-  styleUrl: './login-component.css',
+  templateUrl: './sign-in.component.html',
+  styleUrl: './sign-in.component.css',
 })
-export class LoginComponent {
+export class SignInComponent {
   isLoginView:boolean = true;
   loginModel: LoginModel = new LoginModel();
   userModel: UserModel = new UserModel();

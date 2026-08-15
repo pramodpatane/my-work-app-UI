@@ -11,9 +11,9 @@ import { EmailService } from '../../Services/email-service';
 import { EmailModel, VerifyOtpModel } from '../../Models/email.model';
 import { UserConfiguration, UserModel } from '../../Models/user-model';
 import { UserService } from '../../../core/Services/user-service';
-import { SignUp } from '../sign-up/sign-up';
 import { MenuService } from '../../../core/Services/menu.service';
 import { UserStateService } from '../../../core/Services/user.state.service';
+import { SignUp } from '../../../core/Components/sign-up/sign-up';
 
 @Component({
   selector: 'app-login-component',

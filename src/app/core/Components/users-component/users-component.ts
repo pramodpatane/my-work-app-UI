@@ -5,12 +5,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { SwalService } from '../../../global/swal.service';
 import { UserService } from '../../Services/user-service';
 import { FilterData } from '../../Models/FilterData';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { UserConfiguration, UserModel } from '../../../auth/Models/user-model';
-import { UserRolesService } from '../../Services/user.roles.service';
 import { DropdownModel } from '../../../auth/Models/dropdown.model';
-import { SignUp } from '../../../auth/Components/sign-up/sign-up';
+import { SignUp } from '../sign-up/sign-up';
 
 @Component({
   selector: 'app-users-component',
