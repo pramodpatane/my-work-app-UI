@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { MenuItem } from '../../Models/menu-items';
 import { MenuService } from '../../Services/menu.service';
@@ -25,15 +25,15 @@ export class NavbarComponent {
   logoUrl: string = "../../../assets/DMS Logo.png";
 
   constructor(private router: Router, private swalservice: SwalService, private userStateService: UserStateService,
-    private menuService: MenuService, private cdr: ChangeDetectorRef) { }
+    private menuService: MenuService, private cdr: ChangeDetectorRef, private userState: UserStateService) { }
 
   ngOnInit(): void {
-    const userData = localStorage.getItem('UserData');
-    //const userData = this.userStateService.user$.subscribe(user => { });    
-    if (userData) {
-      this.userName = JSON.parse(userData).userName || 'User';
-      this.userRole = JSON.parse(userData).roleName || 'User';
-      this.userGuid = JSON.parse(userData).recordId || '';
+    const user = this.userState.user();
+    //console.log('User from UserStateService:', user);
+    if (user) {
+      this.userName = user.userName || 'User';
+      this.userRole = user.roleName || 'User';
+      this.userGuid = user.recordId || '';
     }
     this.GetUserAppMenus();
   }

@@ -1,4 +1,7 @@
 export class UserModel {
+    userName: string = "";
+    recordId: string = ""
+    roleName: string = "";
     firstName: string = "";
     lastName: string = "";
     password: string = "";
@@ -7,6 +10,7 @@ export class UserModel {
     phone: string = "";
     email: string = "";
     roleId: number = 0;
+    token: string = "";
     profileImageUrl: string = "";
     isEmailVerified: boolean = false;
     createdBy: string = "";
